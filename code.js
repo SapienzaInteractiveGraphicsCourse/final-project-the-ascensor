@@ -24,6 +24,10 @@ var target;
 var barSpeed = 0;
 var maxSpeed;
 
+var aBoxHtml;
+var sBoxHtml;
+var barHtml;
+
 var spine_00_02;
 var tail_00_03;
 var tail_01_04;
@@ -343,6 +347,10 @@ function init(){
     }
   }
   document.addEventListener('keydown', onKeyDown, false);
+  aBoxHtml = document.getElementById("A");
+  sBoxHtml = document.getElementById("S");
+  barHtml = document.getElementById("speedBar");
+  
   myEmisphereLight();
   myDirectionalLight();
   myPlane();
@@ -361,9 +369,28 @@ function resizeRendererToDisplaySize(renderer) {
   return needResize;
 }
 
+function switchColor(target, attribute, colorString){
+  target.setAttribute(attribute, colorString);
+}
+
+function updateBar(value){
+  barHtml.setAttribute("aria-valuenow", value);
+  barHtml.setAttribute("style", "width:" + value + "%");
+  barHtml.innerHTML = value;
+}
+
 function render(time) {
   time *= 0.001;  // convert to seconds
-
+  if (!a) {
+    switchColor(aBoxHtml, "style", "background: rgba(120, 20, 20, 0.5)");
+  } else{
+    switchColor(aBoxHtml, "style", "background: #AA3333");
+  }
+  if (!s) {
+    switchColor(sBoxHtml, "style", "background: rgba(20, 20, 120, 0.5)");
+  } else{
+    switchColor(sBoxHtml, "style", "background: #3333AA")
+  }
   resizeRendererToDisplaySize(renderer);
   {
     const canvas = renderer.domElement;
@@ -372,7 +399,9 @@ function render(time) {
   }
   barSpeed -= 0.01;
   if(barSpeed < 0) barSpeed = 0;
-  // console.log(barSpeed);
+  console.log(barSpeed);
+  var percentageBarSpeed = String(Math.round((barSpeed/3)*100));
+  updateBar(percentageBarSpeed);
   if(chicken1Loaded){
     // bone2Animation.onUpdate(function(){
     //   bone2Animation.stop();
@@ -382,7 +411,7 @@ function render(time) {
     // });
     
     // startAnimation(chicken)   
-  console.log(shoulder_R_026.rotation.x)
+    // console.log(shoulder_R_026.rotation.x)
   }
   renderer.render(scene, camera);
   TWEEN.update();
