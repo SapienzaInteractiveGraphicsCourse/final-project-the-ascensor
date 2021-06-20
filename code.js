@@ -13,7 +13,7 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 const scene = new THREE.Scene();
 const loader = new THREE.TextureLoader();
 const gltfLoader = new GLTFLoader();
-const controls = new OrbitControls(camera, canvas);
+const controls = new OrbitControls(camera, document.querySelector('.parent'));
 var raccoons = [];
 var raccoonLoaded = false;
 var bone2Animation;
@@ -123,23 +123,107 @@ var barHtml;
 
 
 function myPlane(){
-  const planSize = 40;
-  const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.magFilter = THREE.NearestFilter;
-  const repeats = planSize / 2;
-  texture.repeat.set(repeats,repeats);
 
-  const planeGeo = new THREE.PlaneGeometry(planSize, planSize);
+  // const planSize = 40;
+  // const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
+  // texture.wrapS = THREE.RepeatWrapping;
+  // texture.wrapT = THREE.RepeatWrapping;
+  // texture.magFilter = THREE.NearestFilter;
+  // const repeats = planSize / 2;
+  // texture.repeat.set(repeats,repeats);
+
+  // const planeGeo = new THREE.PlaneGeometry(planSize, planSize);
+  // const planeMat = new THREE.MeshBasicMaterial({
+  //   map: texture,
+  //   side: THREE.DoubleSide,
+  // });
+  // planeMat.color.setRGB(1.5, 1.5, 1.5);
+  // const mesh = new THREE.Mesh(planeGeo,planeMat);
+  // mesh.rotation.x = Math.PI * -.5;
+  // scene.add(mesh);
+
+  const planSize = 2;
+  const planSize2 = 2;
+  const planSize3 = 2;
+  const lineSize = 2;
+  const lineSize2 = 2;
+  const lineSize3 = 2;
+  const texture = loader.load('./track textures/running-track-rubber-cover-texture-top-view-background-picture-id637293798.png');
+  texture.wrapS = THREE.MirroredRepeatWrapping;
+  texture.wrapT = THREE.MirroredRepeatWrapping;
+  texture.magFilter = THREE.NearestFilter;
+  const repeat = planSize/2;
+  texture.repeat.set(repeat,repeat);
+
+
+  const textureLine = loader.load('./track textures/running-track-rubber-cover-texture-top-view-background-picture-id637293798.png');
+  textureLine.wrapS = THREE.ClampToEdgeWrapping;
+  textureLine.wrapT = THREE.ClampToEdgeWrapping;
+  textureLine.magFilter = THREE.NearestFilter;
+  texture.repeat.y = 1;
+  
+
+  const planeGeo = new THREE.PlaneGeometry(planSize * 4, planSize);
+  const planeGeo2 = new THREE.PlaneGeometry(planSize2, planSize2);
+  const planeGeo3 = new THREE.PlaneGeometry(planSize3, planSize3);
   const planeMat = new THREE.MeshBasicMaterial({
     map: texture,
     side: THREE.DoubleSide,
   });
-  planeMat.color.setRGB(1.5, 1.5, 1.5);
+
+  const lineGeo = new THREE.PlaneGeometry(lineSize, lineSize/8);
+  const lineGeo2 = new THREE.PlaneGeometry(lineSize2, lineSize2/8);
+  const lineGeo3 = new THREE.PlaneGeometry(lineSize3, lineSize3/8);
+  const lineMat = new THREE.MeshBasicMaterial({
+    map: textureLine,
+    side: THREE.DoubleSide,
+  });
+  lineMat.color.setRGB(5, 5, 5);
+
   const mesh = new THREE.Mesh(planeGeo,planeMat);
+  const mesh2 = new THREE.Mesh(planeGeo2,planeMat);
+  const mesh3 = new THREE.Mesh(planeGeo3,planeMat);
   mesh.rotation.x = Math.PI * -.5;
+  mesh2.rotation.x = Math.PI * -.5;
+  mesh3.rotation.x = Math.PI * -.5;
+  mesh2.position.x = mesh.position.x + 2;
+  mesh3.position.x = mesh2.position.x + 2;
+
+  const meshLineDown = new THREE.Mesh(lineGeo,lineMat);
+  const meshLine2Down = new THREE.Mesh(lineGeo2,lineMat);
+  const meshLine3Down = new THREE.Mesh(lineGeo3,lineMat);
+  meshLineDown.rotation.x = Math.PI * -.5;
+  meshLine2Down.rotation.x = Math.PI * -.5;
+  meshLine3Down.rotation.x = Math.PI * -.5;
+
+  const meshLineUp = new THREE.Mesh(lineGeo,lineMat);
+  const meshLine2Up = new THREE.Mesh(lineGeo2,lineMat);
+  const meshLine3Up = new THREE.Mesh(lineGeo3,lineMat);
+  meshLineUp.rotation.x = Math.PI * -.5;
+  meshLine2Up.rotation.x = Math.PI * -.5;
+  meshLine3Up.rotation.x = Math.PI * -.5;
+
+  meshLineDown.position.z = mesh.position.y + 1.125;
+  meshLine2Down.position.x = mesh2.position.x;
+  meshLine2Down.position.z = mesh2.position.y + 1.125;
+  meshLine3Down.position.x = mesh3.position.x;
+  meshLine3Down.position.z = mesh3.position.y + 1.125;
+
+  meshLineUp.position.z = mesh.position.y - 1.125;
+  meshLine2Up.position.x = mesh2.position.x;
+  meshLine2Up.position.z = mesh2.position.y - 1.125;
+  meshLine3Up.position.x = mesh3.position.x;
+  meshLine3Up.position.z = mesh3.position.y - 1.125;
+
   scene.add(mesh);
+  // scene.add(mesh2);
+  // scene.add(mesh3);
+  scene.add(meshLineDown);
+  // scene.add(meshLine2Down);
+  // scene.add(meshLine3Down);
+  scene.add(meshLineUp);
+  // scene.add(meshLine2Up);
+  // scene.add(meshLine3Up);
 }
 
 function raccoonBones(root) {
