@@ -157,11 +157,12 @@ function myPlane(){
 
 
   const textureLine = loader.load('./track textures/running-track-rubber-cover-texture-top-view-background-picture-id637293798.png');
-  textureLine.wrapS = THREE.ClampToEdgeWrapping;
+  textureLine.wrapS = THREE.MirroredRepeatWrapping;
   textureLine.wrapT = THREE.ClampToEdgeWrapping;
   textureLine.magFilter = THREE.NearestFilter;
-  texture.repeat.y = 1;
-  
+  textureLine.repeat.y = 1/((planSize) / (lineSize /8)) ;
+  const repeatl = lineSize/2;
+  textureLine.repeat.x = repeatl;
 
   const planeGeo = new THREE.PlaneGeometry(planSize * 4, planSize);
   const planeGeo2 = new THREE.PlaneGeometry(planSize2, planSize2);
@@ -171,7 +172,7 @@ function myPlane(){
     side: THREE.DoubleSide,
   });
 
-  const lineGeo = new THREE.PlaneGeometry(lineSize, lineSize/8);
+  const lineGeo = new THREE.PlaneGeometry(lineSize * 4, lineSize/8);
   const lineGeo2 = new THREE.PlaneGeometry(lineSize2, lineSize2/8);
   const lineGeo3 = new THREE.PlaneGeometry(lineSize3, lineSize3/8);
   const lineMat = new THREE.MeshBasicMaterial({
@@ -215,6 +216,10 @@ function myPlane(){
   meshLine3Up.position.x = mesh3.position.x;
   meshLine3Up.position.z = mesh3.position.y - 1.125;
 
+
+  // mesh.receiveShadow = true;
+  // meshLineDown.receiveShadow = true;
+  // meshLineUp.receiveShadow = true;
   scene.add(mesh);
   // scene.add(mesh2);
   // scene.add(mesh3);
@@ -301,12 +306,17 @@ function myRaccoon(){
     root.rotation.y = Math.PI * .5;
   
     root.traverse((object) => {
-      if (object.isMesh) object.frustumCulled = false;
+      if (object.isMesh){
+        object.frustumCulled = false;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
+        // object.transp
+      } 
     });
 
     raccoonStartPosition(root)
 
-    speed = 5;
+    speed = 1;
     maxSpeed = speed * 3;
     target = {x:20, y:root.position.y, z:root.position.z};
 
@@ -333,6 +343,7 @@ function myDirectionalLight(){
   const light = new THREE.DirectionalLight(color, intensity);
   light.position.set(-50, 10, 0);
   light.target.position.set(0, 0, 0);
+  // light.castShadow = true;
   scene.add(light);
   scene.add(light.target);
 }
@@ -342,6 +353,7 @@ function init(){
   controls.target.set(0, 0, 0);
   controls.update();
   scene.background = new THREE.Color("green");
+  renderer.shadowMap.enabled = true;
   var onKeyDown = function(event) {
     switch(event.keyCode){
       case 65:
@@ -465,6 +477,12 @@ function raccoonStartPosition(root) {
   footFrontR3 = false;
   raccoons[raccoons.length-1][1].front_foot_R_029.rotation.x = -0.25*Math.PI;
 
+  backFootR = {x: Math.abs(0.6*Math.PI - 1.1*Math.PI)}
+  raccoons[raccoons.length-1][1].foot_01_R_054.rotation.x = 0.6*Math.PI;
+
+  backFootL = {x: Math.abs(0.6*Math.PI - 1.1*Math.PI)}
+  raccoons[raccoons.length-1][1].foot_01_L_042.rotation.x = 0.6*Math.PI;
+
   // Thigh
   startRotationThighBackL = {x: raccoons[raccoons.length-1][1].thigh_L_039.rotation.x, 
                             z: raccoons[raccoons.length-1][1].thigh_L_039.rotation.z}
@@ -479,43 +497,73 @@ function raccoonStartPosition(root) {
                   z: Math.abs(startRotationThighBackR.z - 0.12*Math.PI)}
   raccoons[raccoons.length-1][1].thigh_R_051.rotation.x = 0.3*Math.PI;
 
-  backFootR = {x: Math.abs(0.6*Math.PI - 1.1*Math.PI)}
-  raccoons[raccoons.length-1][1].foot_01_R_054.rotation.x = 0.6*Math.PI;
-
-  backFootL = {x: Math.abs(0.6*Math.PI - 1.1*Math.PI)}
-  raccoons[raccoons.length-1][1].foot_01_L_042.rotation.x = 0.6*Math.PI;
-
-  
-  // Rib Cage
-  startPositionRibCage = {y: raccoons[raccoons.length-1][1].ribcage_038.position.y, 
-                           z: raccoons[raccoons.length-1][1].ribcage_038.rotation.z}
-  changeRibCage = {y: Math.abs(startPositionRibCage.y - -0.15), 
-                    z: Math.abs(startPositionRibCage.z - 0.01)}
-
 
   // Neck            
-  changeNeck = {x: 0.25*Math.PI, z: 0.1}
+  changeNeck = {x: 0.3*Math.PI}
 
-
+  // Tail
+  var tailRad = 0.1*Math.PI;
+  tailValues = {
+    t1:{
+      start: raccoons[raccoons.length-1][1].tail_00_03.rotation.x-2*tailRad, 
+      end: raccoons[raccoons.length-1][1].tail_00_03.rotation.x+0.1*tailRad, 
+      step: (2.1*tailRad)/(legStepsAnimation*0.7)},
+    t2:{
+      start: raccoons[raccoons.length-1][1].tail_01_04.rotation.x-0.3*tailRad, 
+      end: raccoons[raccoons.length-1][1].tail_01_04.rotation.x+0.3*tailRad, 
+      step: (0.6*tailRad)/(legStepsAnimation*0.7)},
+    t3:{
+      start: raccoons[raccoons.length-1][1].tail_02_05.rotation.x-0.5*tailRad, 
+      end: raccoons[raccoons.length-1][1].tail_02_05.rotation.x+0.5*tailRad, 
+      step: (1*tailRad)/(legStepsAnimation*0.7)},
+    t4:{
+      start: raccoons[raccoons.length-1][1].tail_03_06.rotation.x-0.7*tailRad, 
+      end: raccoons[raccoons.length-1][1].tail_03_06.rotation.x+0.7*tailRad, 
+      step: (1.4*tailRad)/(legStepsAnimation*0.7)},
+    t5:{
+      start: raccoons[raccoons.length-1][1].tail_04_07.rotation.x-tailRad, 
+      end: raccoons[raccoons.length-1][1].tail_04_07.rotation.x+tailRad, 
+      step: (2*tailRad)/(legStepsAnimation*0.7)}
+  };  
+  raccoons[raccoons.length-1][1].tail_00_03.rotation.x += +0.1*tailRad - (tailValues.t1.step*(legStepsAnimation*0.7))*0.68;
+  raccoons[raccoons.length-1][1].tail_01_04.rotation.x += +0.3*tailRad - (tailValues.t2.step*(legStepsAnimation*0.7))*0.68;
+  raccoons[raccoons.length-1][1].tail_02_05.rotation.x += +0.5*tailRad - (tailValues.t3.step*(legStepsAnimation*0.7))*0.68;
+  raccoons[raccoons.length-1][1].tail_03_06.rotation.x += +0.7*tailRad - (tailValues.t4.step*(legStepsAnimation*0.7))*0.68;
+  raccoons[raccoons.length-1][1].tail_04_07.rotation.x += +tailRad - (tailValues.t5.step*(legStepsAnimation*0.7))*0.68;
+  
+  // Shin
   startRotationShinFrontR = raccoons[raccoons.length-1][1].front_shin_R_028.rotation.x;
-  changeShinFrontR = Math.abs(startRotationShinFrontR - -0.4*Math.PI);
+  changeShinFrontR = Math.abs(startRotationShinFrontR - -0.5*Math.PI);
 
   startRotationShinFrontL = raccoons[raccoons.length-1][1].front_shin_L_016.rotation.x;
-  changeShinFrontL = Math.abs(startRotationShinFrontL - -0.4*Math.PI);
+  changeShinFrontL = Math.abs(startRotationShinFrontL - -0.5*Math.PI);
 
-  // raccoons[raccoons.length-1][1].front_shin_R_028.rotation.x = -0.4*Math.PI;
 
-  // front_thigh_L_015 : root.getObjectByName("front_thigh_L_015"),
-  // front_shin_L_016 : root.getObjectByName("front_shin_L_016"),
-  // spine_00_02 : root.getObjectByName("spine_00_02"),
-  // tail_00_03 : root.getObjectByName("tail_00_03"),
-  // tail_01_04 : root.getObjectByName("tail_01_04"),
-  // tail_02_05 : root.getObjectByName("tail_02_05"),
-  // tail_03_06 : root.getObjectByName("tail_03_06"),
-  // tail_04_07 : root.getObjectByName("tail_04_07"),
-  // spine_01_08 : root.getObjectByName("spine_01_08"),
-  // spine_02_09 : root.getObjectByName("spine_02_09"),
-  // spine_03_010 : root.getObjectByName("spine_03_010"),
+
+  startRotationBackShin = {r: raccoons[raccoons.length-1][1].shin_R_052.rotation.x, l: raccoons[raccoons.length-1][1].shin_L_040.rotation.x} 
+  changeBackShin = Math.abs(startRotationBackShin.r - 0.5*Math.PI);
+
+  //   frontFootL1 = {x: Math.abs(0.25*Math.PI - 0)}
+  // frontFootL2 = {x: Math.abs(-0.25*Math.PI - 0.25*Math.PI)}
+  // frontFootL3 = {x: Math.abs(-0.25*Math.PI - 0)}
+  // footFrontL1 = false;
+  // footFrontL2 = true;
+  // footFrontL3 = false;
+  // raccoons[raccoons.length-1][1].front_foot_L_017.rotation.x = -0.25*Math.PI;
+  // z: Math.abs(startRotationShoulderL.z - -0.1*Math.PI)}
+  // raccoons[raccoons.length-1][1].shoulder_L_014.rotation.x= 0.5*Math.PI;
+  // raccoons[raccoons.length-1][1].shoulder_L_014.rotation.z= -0.1*Math.PI;
+
+  // startRotationShoulderR = {x: raccoons[raccoons.length-1][1].shoulder_R_026.rotation.x, 
+  //     z: raccoons[raccoons.length-1][1].shoulder_R_026.rotation.z}
+  // changeShoulderR = {x: Math.abs(startRotationShoulderR.x - 0.65*Math.PI), 
+  // z: Math.abs(startRotationShoulderR.z - 0.1*Math.PI)}
+  // raccoons[raccoons.length-1][1].shoulder_R_026.rotation.x= 0.5*Math.PI;
+  // raccoons[raccoons.length-1][1].shoulder_R_026.rotation.z= 0.1*Math.PI;
+
+  // raccoons[raccoons.length-1][1].shin_R_052.rotation.x = 0.5*Math.PI;
+  // shin_R_052 : root.getObjectByName("shin_R_052"),
+  // shin_L_040 : root.getObjectByName("shin_L_040"),
 }
 
 // shoulders
@@ -526,7 +574,7 @@ var changeShoulderR;
 var startRotationShoulderR;
 
 var frontLegsDirection = 1;
-var legStepsAnimation = 70;
+var legStepsAnimation = 200;
 
 //feet
 var frontFootL1;
@@ -552,10 +600,6 @@ var changeThighBackL;
 var startRotationThighBackR; 
 var changeThighBackR;
 
-//rib cage
-var changeRibCage;
-var startPositionRibCage;
-
 var changeNeck;
 
 var changeShinFrontR;
@@ -570,18 +614,27 @@ var shinFrontL1 = true;
 var shinFrontL2 = false;
 var shinFrontL3 = false;
 
+var startRotationBackShin;
+var changeBackShin;
+var backShin1 = false;
+var backShin2 = false;
+
+var tailValues;
+var tail1 = true;
+var tail2 = false;
 
 function walkRaccoon() {
   if(raccoonLoaded){
     bone2Animation.onUpdate(function(){
       bone2Animation.stop();
       // bone2Animation = new TWEEN.Tween(aa.position).to(target, ((20 - aa.position.x) / (speed*barSpeed + 0.00000001)) * 1000);
-      bone2Animation = new TWEEN.Tween(raccoons[0][0].position).to(target, ((20 - raccoons[0][0].position.x) / (speed*barSpeedF())) * 1000);
-      bone2Animation.start(); 
+      // bone2Animation = new TWEEN.Tween(raccoons[0][0].position).to(target, ((20 - raccoons[0][0].position.x) / (speed*barSpeedF())) * 1000);
+      // bone2Animation.start(); 
     });
+    
+
 
     walkFrontShoulderLeft();
-
     walkFrontShoulderRight();
     walkFrontShinRight();
     walkFrontShinLeft();
@@ -592,12 +645,18 @@ function walkRaccoon() {
     walkBackThighLeft();
     walkBackThighRight();
     
+    walkBackShin();
+    
     walkBackFootLeft();
     walkBackFootRight();    
     
-    // walkRibCage();
+    walkSpine();
 
-    // walkNeck();
+    walkRibCage();
+
+    walkNeck();
+
+    tail();
 
     yoyo();
   }
@@ -769,17 +828,107 @@ function walkFrontShinLeft() {
   }
 }
 
+function walkBackShin() {
+  var step1 = {x: changeBackShin/(legStepsAnimation*0.32)}
+  var step2 = {x: changeBackShin/(legStepsAnimation*0.68)}
+  if (frontLegsDirection == 1) {
+    if (backShin1) {
+      raccoons[0][1].shin_R_052.rotation.x += step2.x * frontLegsDirection*barSpeedF();
+      raccoons[0][1].shin_L_040.rotation.x += step2.x * frontLegsDirection*barSpeedF();
+      if (raccoons[raccoons.length-1][1].shoulder_L_014.rotation.x >= 0.5*Math.PI) {
+        backShin1 = false;
+        backShin2 = true;
+      }
+    }
+    if (backShin2) {
+      raccoons[0][1].shin_R_052.rotation.x -= step1.x * frontLegsDirection*barSpeedF();
+      raccoons[0][1].shin_L_040.rotation.x -= step1.x * frontLegsDirection*barSpeedF();
+    }
+  } else {
+    raccoons[0][1].shin_R_052.rotation.x = startRotationBackShin.r;
+    raccoons[0][1].shin_L_040.rotation.x = startRotationBackShin.l;
+    backShin1 = true;
+    backShin2 = false;
+  }
+}
+
+function walkBackShinRight() {
+
+}
+
+function walkSpine() {
+  var step = 0.1*Math.PI/legStepsAnimation ;
+  raccoons[raccoons.length-1][1].spine_00_02.rotation.x -= step*frontLegsDirection*barSpeedF();
+  raccoons[raccoons.length-1][1].spine_01_08.rotation.x += step*frontLegsDirection*barSpeedF();
+  raccoons[raccoons.length-1][1].spine_02_09.rotation.x += step*frontLegsDirection*barSpeedF();
+  raccoons[raccoons.length-1][1].spine_03_010.rotation.x += step*frontLegsDirection*barSpeedF();
+  step = 0.049/legStepsAnimation;
+  raccoons[raccoons.length-1][1].spine_01_08.position.y -= step*frontLegsDirection*barSpeedF();
+  raccoons[raccoons.length-1][1].spine_02_09.position.y -= step*frontLegsDirection*barSpeedF();
+  raccoons[raccoons.length-1][1].spine_03_010.position.y -= step*frontLegsDirection*barSpeedF();
+}
 
 function walkRibCage() {
-  var ribCageStep = {y: changeRibCage.y/legStepsAnimation, z: changeRibCage.z/legStepsAnimation}
-  raccoons[0][1].ribcage_038.position.y -= ribCageStep.y * frontLegsDirection*barSpeedF();
-  raccoons[0][1].ribcage_038.position.z -= ribCageStep.z * frontLegsDirection*barSpeedF();
+  var step1 = 0.21/legStepsAnimation;
+  var step2 = 0.07/legStepsAnimation;
+  raccoons[0][1].ribcage_038.position.z -= step1*frontLegsDirection*barSpeedF();
+  raccoons[0][1].ribcage_038.position.y += step2*frontLegsDirection*barSpeedF();
 }
 
 function walkNeck() {
-  var neckStep = {x: changeNeck.x/legStepsAnimation, z: changeNeck.z/legStepsAnimation}
+  var neckStep = {x: changeNeck.x/legStepsAnimation}
   raccoons[0][1].neck_011.rotation.x -= neckStep.x * frontLegsDirection*barSpeedF();
-  raccoons[0][1].neck_011.position.z -= neckStep.z * frontLegsDirection*barSpeedF();
+}
+
+function tail() {
+  if(tail1) {
+    raccoons[raccoons.length-1][1].tail_00_03.rotation.x -= tailValues.t1.step*frontLegsDirection*barSpeedF();
+    raccoons[raccoons.length-1][1].tail_01_04.rotation.x -= tailValues.t2.step*frontLegsDirection*barSpeedF();
+    raccoons[raccoons.length-1][1].tail_02_05.rotation.x -= tailValues.t3.step*frontLegsDirection*barSpeedF();
+    raccoons[raccoons.length-1][1].tail_03_06.rotation.x -= tailValues.t4.step*frontLegsDirection*barSpeedF();
+    raccoons[raccoons.length-1][1].tail_04_07.rotation.x -= tailValues.t5.step*frontLegsDirection*barSpeedF();
+    if (raccoons[raccoons.length-1][1].tail_00_03.rotation.x <= tailValues.t1.start &&
+        raccoons[raccoons.length-1][1].tail_01_04.rotation.x <= tailValues.t2.start &&
+        raccoons[raccoons.length-1][1].tail_02_05.rotation.x <= tailValues.t3.start &&
+        raccoons[raccoons.length-1][1].tail_03_06.rotation.x <= tailValues.t4.start &&
+        raccoons[raccoons.length-1][1].tail_04_07.rotation.x <= tailValues.t5.start) {
+      raccoons[raccoons.length-1][1].tail_00_03.rotation.x = tailValues.t1.start
+      raccoons[raccoons.length-1][1].tail_01_04.rotation.x = tailValues.t2.start
+      raccoons[raccoons.length-1][1].tail_02_05.rotation.x = tailValues.t3.start
+      raccoons[raccoons.length-1][1].tail_03_06.rotation.x = tailValues.t4.start
+      raccoons[raccoons.length-1][1].tail_04_07.rotation.x = tailValues.t5.start
+      tail1 = false;
+      tail2 = true;
+    }
+    if (raccoons[raccoons.length-1][1].tail_00_03.rotation.x >= tailValues.t1.end && 
+          raccoons[raccoons.length-1][1].tail_01_04.rotation.x >= tailValues.t2.end && 
+          raccoons[raccoons.length-1][1].tail_02_05.rotation.x >= tailValues.t3.end && 
+          raccoons[raccoons.length-1][1].tail_03_06.rotation.x >= tailValues.t4.end && 
+          raccoons[raccoons.length-1][1].tail_04_07.rotation.x >= tailValues.t5.end){
+      raccoons[raccoons.length-1][1].tail_00_03.rotation.x = tailValues.t1.end
+      raccoons[raccoons.length-1][1].tail_01_04.rotation.x = tailValues.t2.end
+      raccoons[raccoons.length-1][1].tail_02_05.rotation.x = tailValues.t3.end
+      raccoons[raccoons.length-1][1].tail_03_06.rotation.x = tailValues.t4.end
+      raccoons[raccoons.length-1][1].tail_04_07.rotation.x = tailValues.t5.end
+      tail1 = false;
+      tail2 = true;
+    }
+  }
+  if (tail2) {
+    if (((raccoons[raccoons.length-1][1].tail_00_03.rotation.x == tailValues.t1.end && frontLegsDirection == 1) ||
+        (raccoons[raccoons.length-1][1].tail_00_03.rotation.x == tailValues.t1.start && frontLegsDirection == -1)) &&
+        ((raccoons[raccoons.length-1][1].tail_01_04.rotation.x == tailValues.t2.end && frontLegsDirection == 1) ||
+        (raccoons[raccoons.length-1][1].tail_01_04.rotation.x == tailValues.t2.start && frontLegsDirection == -1)) &&
+        ((raccoons[raccoons.length-1][1].tail_02_05.rotation.x == tailValues.t3.end && frontLegsDirection == 1) ||
+        (raccoons[raccoons.length-1][1].tail_02_05.rotation.x == tailValues.t3.start && frontLegsDirection == -1)) &&
+        ((raccoons[raccoons.length-1][1].tail_03_06.rotation.x == tailValues.t4.end && frontLegsDirection == 1) ||
+        (raccoons[raccoons.length-1][1].tail_03_06.rotation.x == tailValues.t4.start && frontLegsDirection == -1)) &&
+        ((raccoons[raccoons.length-1][1].tail_04_07.rotation.x == tailValues.t5.end && frontLegsDirection == 1) ||
+        (raccoons[raccoons.length-1][1].tail_04_07.rotation.x == tailValues.t5.start && frontLegsDirection == -1))) {
+      tail2 = false;
+      tail1 = true;
+    }
+  }
 }
 
 function yoyo() {
@@ -794,8 +943,8 @@ function print(elem) {
 }
 
 function barSpeedF() {
-  // return  barSpeed + 0.000000001
-  return 1
+  return  barSpeed + 0.000000001
+  // return 1
 }
 
 init();
