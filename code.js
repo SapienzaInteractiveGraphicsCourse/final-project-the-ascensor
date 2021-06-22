@@ -273,8 +273,246 @@ function myDinosaurs(){
   });
 }
 
+function chicken1(x, y, z, t){
+  gltfLoader.load('./chicken1/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    root.scale.multiplyScalar(2); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0.808 + y;
+    root.position.z = 0 + z;
+    root.rotation.y = Math.PI * -.5;
+    root.scale.y = 1.5;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+      }
+    });
+
+    
+    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:2, z:root.scale.z}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+
+    var animation2 = new TWEEN.Tween(root.position).to({x:root.position.x, y: y + 2.058, z:root.position.z}, t);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true);
+    animation2.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function chicken2(x, y, z, t){
+  gltfLoader.load('./chicken2/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    root.scale.multiplyScalar(2); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = -0.04 + y;
+    root.position.z = 0 + z;
+    root.rotation.y = Math.PI * .5;
+    root.scale.y = 1.5;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+      }
+    });
+    
+    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:2, z:root.scale.z}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function chicken3(x, y, z, t){
+  gltfLoader.load('./chicken3/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    var scaling = 5;
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0 + y;
+    root.position.z = 0 + z;
+    root.rotation.y = Math.PI * -.5;
+    root.scale.z = scaling*2;
+    root.scale.y = scaling/2;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+      }
+    });
+
+    
+    
+    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:scaling, z:scaling}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function chicken4(x, y, z, t){
+  gltfLoader.load('./chicken4/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    var scaling = 7;
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0 + y;
+    root.position.z = 0 + z;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+      }
+    });
+
+    var leftWing = root.getObjectByName("ArmatureNatureChicken_WingUL_ArmatureNatureChicken");
+    var rightWing = root.getObjectByName("ArmatureNatureChickenWingUR_ArmatureNatureChicken");
+    var head = root.getObjectByName("ArmatureNatureChickenHead_ArmatureNatureChicken");
+
+    leftWing.rotation.z-=1*Math.PI;
+    leftWing.rotation.y+=0.2*Math.PI;
+
+    rightWing.rotation.z-=1*Math.PI;
+    rightWing.rotation.y+=0.2*Math.PI;
+    
+    var animation1 = new TWEEN.Tween(leftWing.rotation).to({x:leftWing.rotation.x,
+                                                            y:leftWing.rotation.y,
+                                                            z:leftWing.rotation.z-0.4*Math.PI}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+
+    var animation2 = new TWEEN.Tween(rightWing.rotation).to({x:rightWing.rotation.x,
+                                                             y:rightWing.rotation.y,
+                                                             z:rightWing.rotation.z-0.4*Math.PI}, t);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true)
+    animation2.start();
+
+    
+    var animation3 = new TWEEN.Tween(head.position).to({x:head.position.x, y:head.position.y, z:0.05}, t);
+    animation3.repeat(Infinity);
+    animation3.yoyo(true);
+    animation3.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function chicken5(x, y, z, t){
+  gltfLoader.load('./chicken5/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    var scaling = 0.5
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 1 + y;
+    root.position.z = 0 + z;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+      }
+    });
+    
+    var animation1 = new TWEEN.Tween(root.scale).to({x:scaling*2, y:scaling*1.1, z:root.scale.z}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+
+    var animation2 = new TWEEN.Tween(root.rotation).to({x:-0.25*Math.PI, y:root.rotation.y, z:root.rotation.z}, t);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true);
+    animation2.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function pigeon1(x, y, z, t){
+  gltfLoader.load('./pigeon1/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    var scaling = 0.1;
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0 + y;
+    root.position.z = 0 + z;
+    // root.scale.y = 0.5*scaling;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+      }
+    });
+
+    
+    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:scaling, z:root.scale.z}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+
+    var animation2 = new TWEEN.Tween(root.position).to({x:root.position.x, y: y + scaling*10, z:root.position.z}, t);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true);
+    animation2.start();
+
+    var animation3 = new TWEEN.Tween(root.rotation).to({x:root.rotation.x, y: Math.PI*2, z:root.rotation.z}, t);
+    animation3.repeat(Infinity);
+    animation3.repeatDelay(t);
+    animation3.yoyo(true);
+    animation3.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function trex1(x, y, z , t){
+
+}
+
+function tribunePopulation(){
+  chicken1(0, 4, -49, 400);
+  chicken1(10, 4, -52, 300);
+  chicken1(-15, 4, -50, 500);
+  chicken2(20, 4.1, -50, 450);
+  chicken2(5, 7.1, -59, 550);
+  chicken2(-8, 10.1, -68.5, 150);
+  chicken3(30, 4, -50, 250);
+  chicken3(-28.5, 16.1, -87, 375);
+  chicken3(-17.25, 13.1, -77, 425);
+  chicken4(40, 16.1, -83.5, 264);
+  chicken4(45, 13.1, -74, 394);
+  chicken4(36, 10.1, -64, 204);
+  chicken5(-38.5, 4.1, -50, 298);
+  chicken5(-44.5, 7.1, -59, 379);
+  chicken5(-40.8, 10.1, -67, 403);
+  pigeon1(-70, 4.1, -50.2, 378);
+  pigeon1(-65.16, 16.1, -83.9, 413);
+  pigeon1(69, 4.1, -46.4, 321);
+}
+
 function myTribune(){
   //myDinosaurs();
+  tribune||Population();
   gltfLoader.load('./tribune/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(0.01);
@@ -349,8 +587,10 @@ function myDirectionalLight(){
 }
 
 function init(){
-  camera.position.set(0, 10, 20);
-  controls.target.set(0, 0, 0);
+  // camera.position.set(0, 10, 20);
+  // controls.target.set(0, 0, 0);
+  camera.position.set(0, 10, -50);
+  controls.target.set(0, 0, -50);
   controls.update();
   scene.background = new THREE.Color("green");
   renderer.shadowMap.enabled = true;
