@@ -28,99 +28,6 @@ var aBoxHtml;
 var sBoxHtml;
 var barHtml;
 
-// // shoulders
-// var changeShoulderL;
-// var startRotationShoulderL;
-
-// var changeShoulderR;
-// var startRotationShoulderR;
-
-// var frontLegsDirection = 1;
-// var legStepsAnimation = 600;
-
-// //feet
-// var frontFootL1;
-// var frontFootL2;
-// var frontFootL3;
-// var footFrontL1 = true;
-// var footFrontL2 = false;
-// var footFrontL3 = false;
-
-// var frontFootR1;
-// var frontFootR2;
-// var frontFootR3;
-// var footFrontR1 = true;
-// var footFrontR2 = false;
-// var footFrontR3 = false;
-
-// var spine_00_02;
-// var tail_00_03;
-// var tail_01_04;
-// var tail_02_05;
-// var tail_03_06;
-// var tail_04_07;
-// var spine_01_08;
-// var spine_02_09;
-// var spine_03_010;
-// var neck_011;
-// var head_012;
-// var jaw_lower_013;
-// var shoulder_L_014;
-// var front_thigh_L_015;
-// var front_shin_L_016;
-// var front_foot_L_017;
-// var f_pinky_00_L_018;
-// var f_pinky_01_L_019;
-// var f_ring_00_L_020;
-// var f_ring_01_L_021;
-// var f_middle_00_L_022;
-// var f_middle_01_L_023;
-// var f_index_00_L_024;
-// var f_index_01_L_025;
-// var shoulder_R_026;
-// var front_thigh_R_027;
-// var front_shin_R_028;
-// var front_foot_R_029;
-// var f_pinky_00_R_030;
-// var f_pinky_01_R_031;
-// var f_ring_00_R_032;
-// var f_ring_01_R_033;
-// var f_middle_00_R_034;
-// var f_middle_01_R_035;
-// var f_index_00_R_036;
-// var f_index_01_R_037;
-// var ribcage_038;
-// var thigh_L_039;
-// var shin_L_040;
-// var foot_00_L_041;
-// var foot_01_L_042;
-// var r_pinky_00_L_043;
-// var r_pinky_01_L_044;
-// var r_ring_00_L_045;
-// var r_ring_01_L_046;
-// var r_middle_00_L_047;
-// var r_middle_01_L_048;
-// var r_index_00_L_049;
-// var r_index_01_L_050;
-// var thigh_R_051;
-// var shin_R_052;
-// var foot_00_R_053;
-// var foot_01_R_054;
-// var r_pinky_00_R_055;
-// var r_pinky_01_R_056;
-// var r_ring_00_R_057;
-// var r_ring_01_R_058;
-// var r_middle_00_R_059;
-// var r_middle_01_R_060;
-// var r_index_00_R_061;
-// var r_index_01_R_00;
-
-// var speedShoulder;
-// var distanceRotationStart;
-// var legInitialRotation;
-// var legdistanceRotation;
-// var legAnimation;
-
 function trackField(){
   var width = 140;
   var height = 2;
@@ -255,18 +162,87 @@ function raccoonBones(root) {
   r_index_01_R_00 : root.getObjectByName("r_index_01_R_00")};
 }
 
-function myDinosaurs(){
-  gltfLoader.load('./trex3/scene.gltf', function (gltf){
+function dinoTailAnimation(tail, tailrot, t) {
+  var animation = new TWEEN.Tween(tail.rotation).to({x:tail.rotation.x, y:-tailrot, z:tail.rotation.z + tailrot}, t/2);
+  animation.repeat(Infinity);
+  animation.yoyo(true);
+  animation.start();
+}
+
+function trex1(x, y, z , t){
+  gltfLoader.load('./trex1/scene.gltf', function (gltf){
     const root = gltf.scene;
+    var scaling = 3;
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0 + y;
+    root.position.z = 0 + z;
+  
+    var leftLeg = [];
+    var i = 0;
     root.traverse((object) => {
-      print(object.name);
       if (object.isMesh){
         object.frustumCulled = false;
-        // object.castShadow = true;
-        // object.receiveShadow = true;
-        // object.transp
-      } 
+      }
+      if (object.name.substring(0, 6) == "Bip001") {
+        var v = parseInt(object.name.substring(object.name.length-2, object.name.length));
+        if (v <= 68 && v >= 54){
+          leftLeg.push(object);
+        }
+        if (v <= 83 && v >= 69){
+          leftLeg[i].rotation.x = -object.rotation.x;
+          leftLeg[i].rotation.y = -object.rotation.y;
+          leftLeg[i].rotation.z = object.rotation.z;
+          
+          leftLeg[i].position.x = object.position.x;
+          leftLeg[i].position.y = object.position.y;
+          leftLeg[i].position.z = -object.position.z;
+          i++;
+        }
+      }
     });
+    
+    var head = root.getObjectByName("Bip001_Head_7");
+    head.rotation.y = -Math.PI*0.1;
+    head.rotation.x = -Math.PI*0.1;
+    var animation = new TWEEN.Tween(head.rotation).to({x:Math.PI*0.1, y:Math.PI*0.1, z:Math.PI*0.1}, t/1.5);
+    animation.repeat(Infinity);
+    animation.yoyo(true);
+    animation.start();
+
+    var tail1 = root.getObjectByName("Bip001_Tail_95");
+    var tail2 = root.getObjectByName("Bip001_Tail1_92");
+    var tail3 = root.getObjectByName("Bip001_Tail2_91");
+    var tail4 = root.getObjectByName("Bip001_Tail3_90");
+    var tail5 = root.getObjectByName("Bip001_Tail4_89");
+    var tail6 = root.getObjectByName("Bip001_Tail5_88");
+    var tail7 = root.getObjectByName("Bip001_Tail6_87");
+    var tail8 = root.getObjectByName("Bip001_Tail7_86");
+    var tail9 = root.getObjectByName("Bip001_Tail8_85");
+    var tail10 = root.getObjectByName("Bip001_TailNub_84");
+
+    var tailrot = 0.05;
+    tail1.rotation.y = Math.PI*2*tailrot;
+    tail2.rotation.y = Math.PI*tailrot;
+    tail3.rotation.y = Math.PI*tailrot;
+    tail4.rotation.y = Math.PI*tailrot;
+    tail5.rotation.y = Math.PI*tailrot;
+    tail6.rotation.y = Math.PI*tailrot;
+    tail7.rotation.y = Math.PI*tailrot;
+    tail8.rotation.y = Math.PI*tailrot;
+    tail9.rotation.y = Math.PI*tailrot;
+    tail10.rotation.y = Math.PI*tailrot;
+    dinoTailAnimation(tail1, tailrot, t);
+    dinoTailAnimation(tail2, 1.8*tailrot, t);
+    dinoTailAnimation(tail3, 1.6*tailrot, t);
+    dinoTailAnimation(tail4, 1.4*tailrot, t);
+    dinoTailAnimation(tail5, 1.2*tailrot, t);
+    dinoTailAnimation(tail6, tailrot, t);
+    dinoTailAnimation(tail7, 1.2*tailrot, t);
+    dinoTailAnimation(tail8, 2.4*tailrot, t);
+    dinoTailAnimation(tail9, 2.6*tailrot, t);
+    dinoTailAnimation(tail10, 2.8*tailrot, t);
+
     scene.add(root);
   }, undefined, function (error) {
     console.error(error);
@@ -400,7 +376,7 @@ function chicken4(x, y, z, t){
                                                              y:rightWing.rotation.y,
                                                              z:rightWing.rotation.z-0.4*Math.PI}, t);
     animation2.repeat(Infinity);
-    animation2.yoyo(true)
+    animation2.yoyo(true);
     animation2.start();
 
     
@@ -454,7 +430,6 @@ function pigeon1(x, y, z, t){
     root.position.x = 0 + x; // once rescaled, position the model where needed
     root.position.y = 0 + y;
     root.position.z = 0 + z;
-    // root.scale.y = 0.5*scaling;
   
     root.traverse((object) => {
       if (object.isMesh){
@@ -485,34 +460,171 @@ function pigeon1(x, y, z, t){
   });
 }
 
-function trex1(x, y, z , t){
-
+function seal1(x, y, z, t){
+  gltfLoader.load('./seal1/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    var scaling = 0.015;
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0 + y;
+    root.position.z = 0 + z;
+    root.rotation.y = Math.PI*0.19;
+    
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+      }
+    });
+    var a= "Bone003_04"
+    root.getObjectByName(a).rotation.y = Math.PI*0.2;
+    root.getObjectByName(a).rotation.x = -Math.PI*0.2;
+    
+    var neck =root.getObjectByName("Bone003_04")
+    var animation1 = new TWEEN.Tween(neck.rotation).to({x:Math.PI*0.2, y:-Math.PI*0.2, z:neck.rotation.z}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
 }
+
+function giraffe1(x, y, z, t){
+  gltfLoader.load('./giraffe1/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    var scaling = 1.8;
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0 + y;
+    root.position.z = 0 + z;
+    // root.rotation.y = -Math.PI*0.5
+    
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+        object.material.wireframe = false;
+      }
+      print(object.name);
+    });
+
+    var neck1 = root.getObjectByName("Bone003_Armature");
+    var neck2 = root.getObjectByName("Bone004_Armature");
+    var neck3 = root.getObjectByName("Bone005_Armature");
+    var neck4 = root.getObjectByName("Bone006_Armature");
+    neck1.rotation.z = Math.PI*0.05;
+    neck2.rotation.z = Math.PI*0.07;
+    neck3.rotation.z = Math.PI*0.1;
+    neck4.rotation.y = Math.PI*0.05;
+
+    var animation1 = new TWEEN.Tween(neck1.rotation).to({x:neck1.rotation.x, y:neck1.rotation.y, z:-Math.PI*0.05}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+
+    var animation2 = new TWEEN.Tween(neck2.rotation).to({x:neck2.rotation.x, y:neck2.rotation.y, z:-Math.PI*0.07}, t);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true);
+    animation2.start();
+
+    var animation3 = new TWEEN.Tween(neck3.rotation).to({x:neck3.rotation.x, y:neck3.rotation.y, z:-Math.PI*0.1}, t);
+    animation3.repeat(Infinity);
+    animation3.yoyo(true);
+    animation3.start();
+
+    var animation4 = new TWEEN.Tween(neck4.rotation).to({x:neck4.rotation.x, y:-Math.PI*0.05, z:neck4.rotation.z}, t);
+    animation4.repeat(Infinity);
+    animation4.yoyo(true);
+    animation4.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function elephant1(x, y, z, t){
+  gltfLoader.load('./elephant1/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    var scaling = 4;
+    root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
+    root.position.x = 0 + x; // once rescaled, position the model where needed
+    root.position.y = 0 + y;
+    root.position.z = -3 + z;
+    root.rotation.y = -Math.PI*0.5;
+    
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = false;
+        object.material.wireframe = false;
+      }
+      print(object.name);
+    });
+
+    var rightEar = root.getObjectByName("Elephant_BabyMeshbone_R_ear_00_15");
+    var animation1 = new TWEEN.Tween(rightEar.rotation).to({x:rightEar.rotation.x, y:rightEar.rotation.y, z:-Math.PI*0.4}, t);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+    
+    var leftEar = root.getObjectByName("Elephant_BabyMeshbone_L_ear_00_21");
+    var animation2 = new TWEEN.Tween(leftEar.rotation).to({x:leftEar.rotation.x, y:leftEar.rotation.y, z:-Math.PI*0.4}, t);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true);
+    animation2.start();
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
 
 function tribunePopulation(){
   chicken1(0, 4, -49, 400);
   chicken1(10, 4, -52, 300);
   chicken1(-15, 4, -50, 500);
+
   chicken2(20, 4.1, -50, 450);
   chicken2(5, 7.1, -59, 550);
   chicken2(-8, 10.1, -68.5, 150);
-  chicken3(30, 4, -50, 250);
+
+  chicken3(30, 7, -53, 250);
   chicken3(-28.5, 16.1, -87, 375);
   chicken3(-17.25, 13.1, -77, 425);
+
   chicken4(40, 16.1, -83.5, 264);
   chicken4(45, 13.1, -74, 394);
   chicken4(36, 10.1, -64, 204);
+
   chicken5(-38.5, 4.1, -50, 298);
   chicken5(-44.5, 7.1, -59, 379);
   chicken5(-40.8, 10.1, -67, 403);
+
   pigeon1(-70, 4.1, -50.2, 378);
   pigeon1(-65.16, 16.1, -83.9, 413);
   pigeon1(69, 4.1, -46.4, 321);
+
+  trex1(-55, 4.1, -50, 900);
+  trex1(-60, 10.1, -68, 1000);
+  trex1(20, 10.1, -70, 1100);
+
+  seal1(-50, 16.1, -90, 486);
+  seal1(-45, 13.1, -80, 562);
+  seal1(-15, 7.1, -60, 562);
+
+  giraffe1(48, 4.1, -46.5, 691);
+  giraffe1(54, 10.1, -66.9, 758);
+  giraffe1(16, 16.1, -84.1, 1200);
+
+  elephant1(-30, 7.1, -69.5, 727);
+  elephant1(-0.5, 13.1, -86.9, 653);
+  elephant1(63, 16.1, -96.9, 365);
+
 }
 
 function myTribune(){
-  //myDinosaurs();
-  tribune||Population();
+  tribunePopulation();
   gltfLoader.load('./tribune/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(0.01);
@@ -1095,10 +1207,6 @@ function walkBackShin() {
   }
 }
 
-function walkBackShinRight() {
-
-}
-
 function walkSpine() {
   var step = 0.1*Math.PI/legStepsAnimation ;
   raccoons[raccoons.length-1][1].spine_00_02.rotation.x -= step*frontLegsDirection*barSpeedF();
@@ -1186,7 +1294,7 @@ function print(elem) {
 }
 
 function barSpeedF() {
-  return  barSpeed + 0.000000001
+  return  barSpeed + 0.000000001;
   // return 1
 }
 
