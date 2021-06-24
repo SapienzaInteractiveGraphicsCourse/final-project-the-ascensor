@@ -13,14 +13,15 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 const scene = new THREE.Scene();
 const loader = new THREE.TextureLoader();
 const gltfLoader = new GLTFLoader();
-// const controls = new OrbitControls(camera, document.querySelector('.parent'));
+const controls = new OrbitControls(camera, document.querySelector('.parent'));
+var myRacconCursorMesh;
 var raccoons = [];
 var raccoonLoaded = false;
 var bone2Animation;
 var a = false;
 var s = false;
 var speed = [];
-var barSpeed = 1.75;
+var barSpeed = 0;
 var maxSpeed = 1.75;
 
 var aBoxHtml;
@@ -80,12 +81,13 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
   textureField.magFilter = THREE.NearestFilter;
 
   const planeGeo = new THREE.PlaneGeometry(sizeX, sizeY);
-  const planeMat = new THREE.MeshBasicMaterial({
+  const planeMat = new THREE.MeshLambertMaterial({
     map: textureField,
     side: THREE.DoubleSide,
   });
 
-  if(line != 1) planeMat.color.setRGB(5, 5, 5);
+  planeMat.color.setRGB(0.4, 0.4, 0.4);
+  if(line != 1) planeMat.color.setRGB(2.5, 2.5, 2.5);
 
   const mesh = new THREE.Mesh(planeGeo,planeMat);
   mesh.rotation.x = Math.PI * -.5;
@@ -93,6 +95,8 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
   mesh.position.x = x;
   mesh.position.y = y;
   mesh.position.z = z;
+  mesh.receiveShadow = true;
+  mesh.frustumCulled = true;
   scene.add(mesh);
 }
 
@@ -181,7 +185,9 @@ function trex1(x, y, z , t){
     var i = 0;
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
       if (object.name.substring(0, 6) == "Bip001") {
         var v = parseInt(object.name.substring(object.name.length-2, object.name.length));
@@ -260,7 +266,9 @@ function chicken1(x, y, z, t){
   
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -293,7 +301,9 @@ function chicken2(x, y, z, t){
   
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
     
@@ -322,7 +332,9 @@ function chicken3(x, y, z, t){
   
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -350,7 +362,9 @@ function chicken4(x, y, z, t){
   
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -401,7 +415,9 @@ function chicken5(x, y, z, t){
   
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
     
@@ -432,7 +448,9 @@ function pigeon1(x, y, z, t){
   
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -471,7 +489,9 @@ function seal1(x, y, z, t){
     
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
     var a= "Bone003_04"
@@ -501,8 +521,9 @@ function giraffe1(x, y, z, t){
     
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
-        object.material.wireframe = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -553,8 +574,9 @@ function elephant1(x, y, z, t){
     
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
-        object.material.wireframe = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -631,10 +653,9 @@ function myTribune(){
     root.rotation.y = Math.PI * .5;
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
-        // object.castShadow = true;
-        // object.receiveShadow = true;
-        // object.transp
+        object.frustumCulled = true;
+        object.castShadow = true;
+        object.receiveShadow = true;
       } 
     });
     scene.add(root);
@@ -643,7 +664,7 @@ function myTribune(){
   });
 }
 
-function myRaccoon(z, load = false){
+function myRaccoon(z, load = false, me = false){
   gltfLoader.load('./racoon2/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(2); // adjust scalar factor to match your scene scale
@@ -654,12 +675,15 @@ function myRaccoon(z, load = false){
   
     root.traverse((object) => {
       if (object.isMesh){
-        object.frustumCulled = false;
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
       } 
     });
 
 
-    var otherSpeed = 150 - Math.random()*50;
+    var otherSpeed = 110 - Math.random()*15;
+    if (me) otherSpeed = 180;
     raccoonStartPosition(root, otherSpeed)
 
     scene.add(root);
@@ -677,23 +701,59 @@ function myEmisphereLight(){
   scene.add(light);
 }
 
+
+function myRacconCursor() {
+  const myRacconCursor = new THREE.ConeGeometry(0.3, 1, 4);
+  const myRacconCursorMat = new THREE.MeshPhongMaterial({
+    color: 0xFF0000,
+
+  });
+  myRacconCursorMesh = new THREE.Mesh(myRacconCursor,myRacconCursorMat);
+  myRacconCursorMesh.rotation.z += Math.PI;
+  myRacconCursorMesh.position.x = -140/2 + 0.7;
+  myRacconCursorMesh.position.y = 3.5;
+  myRacconCursorMesh.position.z = 4.5;
+  var animation1 = new TWEEN.Tween(myRacconCursorMesh.position).to({x: myRacconCursorMesh.position.x, y:3, z: myRacconCursorMesh.position.z}, 1300);
+  animation1.repeat(Infinity);
+  animation1.yoyo(true);
+  animation1.start();
+  var animation2 = new TWEEN.Tween(myRacconCursorMesh.rotation).to({x: myRacconCursorMesh.rotation.x, y:-Math.PI, z: myRacconCursorMesh.rotation.z}, 2000);
+  animation2.repeat(Infinity);
+  animation2.yoyo(true);
+  animation2.start();
+  scene.add(myRacconCursorMesh);
+}
+
 function myDirectionalLight(){
   const color = 0xFFFFFF;
-  const intensity = 2;
+  const intensity = 5;
   const light = new THREE.DirectionalLight(color, intensity);
-  light.position.set(0, 100, 0);
+  light.position.set(100, 50, 0);
   light.target.position.set(0, 0, 0);
-  // light.castShadow = true;
+  light.castShadow = true;
+  light.shadow.camera.top = 300;
+  light.shadow.camera.bottom = -300;
+  light.shadow.camera.right = 300;
+  light.shadow.camera.left = -300;
+  light.shadow.mapSize.width = 20000;
+  light.shadow.mapSize.height = 20000;
+
+  const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
+  scene.add(cameraHelper);
+
+  const helper = new THREE.DirectionalLightHelper(light);
+  scene.add(helper);
   scene.add(light);
   scene.add(light.target);
 }
 
 function init(){
-  // camera.position.set(0, 10, 20);
-  // controls.target.set(0, 0, 0);
+  renderer.shadowMap.enabled = true;
+  camera.position.set(0, 10, 20);
+  controls.target.set(0, 0, 0);
   // camera.position.set(0, 10, -50);
   // controls.target.set(0, 0, -50);
-  // controls.update();
+  controls.update();
   scene.background = new THREE.Color("green");
   renderer.shadowMap.enabled = true;
   var onKeyDown = function(event) {
@@ -702,14 +762,14 @@ function init(){
         if (!a) {
           a = true;
           s = false;
-          // barSpeed += ((maxSpeed - barSpeed) * 25) / 100;
+          barSpeed += ((maxSpeed - barSpeed) * 25) / 100;
         }
         break;
       case 83:
         if (!s) {
           s = true;
           a = false;
-          // barSpeed += ((maxSpeed - barSpeed) * 25) / 100;
+          barSpeed += ((maxSpeed - barSpeed) * 25) / 100;
         }
         break;
     }
@@ -723,7 +783,10 @@ function init(){
   myEmisphereLight();
   myDirectionalLight();
   trackField();
-  myRaccoon(4.5);
+
+  myRacconCursor();
+
+  myRaccoon(4.5, false, true);
   setTimeout(() => {
     myRaccoon(2.25);
     setTimeout(() => {
@@ -783,8 +846,8 @@ function render(time) {
     camera.updateProjectionMatrix();
   }
 
-  // barSpeed -= 0.01;
-  // if(barSpeed < 0) barSpeed = 0;
+  barSpeed -= 0.001;
+  if(barSpeed < 0) barSpeed = 0;
   // console.log(time);
   var percentageBarSpeed = String(Math.round((barSpeed/3)*100));
 
@@ -999,12 +1062,12 @@ function walkRaccoon(time) {
   // if ((time - startingTime) >= 3) print("VIA!");
 
   if(raccoonLoaded && (time - startingTime) >= 3){
-    camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
-    camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
+    // camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
+    // camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
 
     // controls.target.set(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
     // controls.update();
-
+    myRacconCursorMesh.position.x = raccoons[0][0].position.x;
     for (var i = 0; i < raccoons.length; i++) {
       var step = 3/legStepsAnimation[i];
       raccoons[i][0].position.x += step*barSpeedF(i);
@@ -1306,7 +1369,10 @@ function tail(i) {
 function yoyo(i) {
   if (raccoons[i][1].shoulder_L_014.rotation.x >= 0.65*Math.PI || 
     raccoons[i][1].shoulder_L_014.rotation.x <= startRotationShoulderL[i].x) {
-      frontLegsDirection[i] *= -1;
+      frontLegsDirection[i] *= -1; 
+      if (i != 0 && frontLegsDirection[i] == 1) {
+        legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 90)/20)*5;
+      } 
   }
 }
 
