@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Raccons Rush</title>
+        <style>
+            body{
+                background-image: url('./textures/oldPaperBackground.png');
+                background-repeat: no-repeat;
+                background-size:cover;
+                font-family: Copperplate, Papyrus, fantasy;
+            }
+
+            #td1{
+                text-align: right;
+            }
+
+            #td2{
+                text-align: left;
+            }
+
+            #button1{
+                display:inline-block;
+                padding:0.35em 1.2em;
+                border:0.1em solid rgb(87, 85, 85);
+                margin:0 0.3em 0.3em 0;
+                border-radius:0.12em;
+                height: auto;
+                width: 250px;
+                text-decoration:none;
+                font-family: Copperplate, Papyrus, fantasy;
+                font-weight:300;
+                font-size: 40px;
+                color:rgb(87, 85, 85);
+                background-color: #ffffff00;
+                text-align:center;
+                transition: all 0.2s;
+            }
+            #button1:hover{
+                color:#000000;
+                background-color:#e4e4e4;
+            }
+           
+        </style>
+	</head>
+    <body>
+        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:70px; font-weight: bold;'>Raccons Rush</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:40px; '>Welcome to Raccons Race game</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:40px; '>You will impersonate Steve a young raccoon who wants to become the fastest raccoon in the world.</div> 
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:40px; '>Today he will be able to fulfill his dream. He will be competing with the greatest raccoon racers from around the world.</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:40px; '>All animals from all eras and all parts of the world have gathered today to witness this great event.</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:40px; '>Will Steve be able to make his dream come true?</div>
+
+        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:60px; '>Instructions:
+            <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:40px; '>Press the <b>A</b> and <b>S</b> keys alternately to make steve run, the faster you are the faster steve will be too!</div>
+        </div>
+        
+        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:60px; '>Choose difficulty:</div>
+        <table align='center'>
+            <tr>
+                <td id = 'td1'>
+                    <button id = "button1">Easy</button>
+                </td>
+
+                <td id = 'td2'>
+                    <div align='left' style='color:rgb(87, 85, 85);font-size:40px;'>
+                        Other raccoons are much slower than your maximum speed
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td id = 'td1'>
+                    <button id = "button1">Medium</button>
+                </td>
+
+                <td id = 'td2'>
+                    <div align='left' style='color:rgb(87, 85, 85);font-size:40px; '>
+                        Other raccoons are slower than your top speed, but not too much!
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td id = 'td1'>
+                    <button id = "button1">Hard</button>
+                </td>
+
+                <td id = 'td2'>
+                    <div align='left' style='color:rgb(87, 85, 85);font-size:40px; '>
+                        \\
+                    </div>
+                </td>
+            </tr>
+        </table>
+	</body>   
+</html>

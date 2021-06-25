@@ -24,6 +24,29 @@ var speed = [];
 var barSpeed = 0;
 var maxSpeed = 1.75;
 
+// var cursorAnimation1;
+// var cursorAnimation2;
+var animations = [];
+// var elephantAnimation1 = [];
+// var elephantAnimation2 = [];
+// var giraffeAnimation1;
+// var giraffeAnimation2;
+// var giraffeAnimation3;
+// var giraffeAnimation4;
+// var sealAnimation1;
+// var pigeonAnimation1;
+// var chicken5Animation1;
+// var chicken5Animation2;
+// var chicken4Animation1;
+// var chicken4Animation2;
+// var chicken4Animation3;
+// var chicken3Animation1;
+// var chicken2Animation1;
+// var chicken1Animation1;
+// var chicken1Animation2;
+// var headDinoAnimation;
+// var tailAnimations = [];
+
 var aBoxHtml;
 var sBoxHtml;
 var barHtml;
@@ -34,8 +57,8 @@ function trackField(){
   var lineHeigth = height/8;
   var repeat = width/height;
   var repeatEndLines = (5*height + 6*lineHeigth)/height;
-  var trackTexture = './trackTextures/runningTrackField.png';
-  var grassTexture = './trackTextures/grass5.png';
+  var trackTexture = './textures/runningTrackField.png';
+  var grassTexture = './textures/grass.png';
 
   myPlane(200, 200, grassTexture, 0, -0.1, 0, 1, 40, false, true);
 
@@ -170,6 +193,7 @@ function dinoTailAnimation(tail, tailrot, t) {
   animation.repeat(Infinity);
   animation.yoyo(true);
   animation.start();
+  animations.push(animation);
 }
 
 function trex1(x, y, z , t){
@@ -210,10 +234,12 @@ function trex1(x, y, z , t){
     var head = root.getObjectByName("Bip001_Head_7");
     head.rotation.y = -Math.PI*0.1;
     head.rotation.x = -Math.PI*0.1;
-    var animation = new TWEEN.Tween(head.rotation).to({x:Math.PI*0.1, y:Math.PI*0.1, z:Math.PI*0.1}, t/1.5);
-    animation.repeat(Infinity);
-    animation.yoyo(true);
-    animation.start();
+    var headDinoAnimation = new TWEEN.Tween(head.rotation).to({x:Math.PI*0.1, y:Math.PI*0.1, z:Math.PI*0.1}, t/1.5);
+    headDinoAnimation.repeat(Infinity);
+    headDinoAnimation.yoyo(true);
+    headDinoAnimation.start();
+
+    animations.push(headDinoAnimation);
 
     var tail1 = root.getObjectByName("Bip001_Tail_95");
     var tail2 = root.getObjectByName("Bip001_Tail1_92");
@@ -273,15 +299,18 @@ function chicken1(x, y, z, t){
     });
 
     
-    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:2, z:root.scale.z}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var chicken1Animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:2, z:root.scale.z}, t);
+    chicken1Animation1.repeat(Infinity);
+    chicken1Animation1.yoyo(true);
+    chicken1Animation1.start();
 
-    var animation2 = new TWEEN.Tween(root.position).to({x:root.position.x, y: y + 2.058, z:root.position.z}, t);
-    animation2.repeat(Infinity);
-    animation2.yoyo(true);
-    animation2.start();
+    var chicken1Animation2 = new TWEEN.Tween(root.position).to({x:root.position.x, y: y + 2.058, z:root.position.z}, t);
+    chicken1Animation2.repeat(Infinity);
+    chicken1Animation2.yoyo(true);
+    chicken1Animation2.start();
+
+    animations.push(chicken1Animation1);
+    animations.push(chicken1Animation2);
 
     scene.add(root);
   }, undefined, function (error) {
@@ -307,10 +336,12 @@ function chicken2(x, y, z, t){
       }
     });
     
-    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:2, z:root.scale.z}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var chicken2Animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:2, z:root.scale.z}, t);
+    chicken2Animation1.repeat(Infinity);
+    chicken2Animation1.yoyo(true);
+    chicken2Animation1.start();
+
+    animations.push(chicken2Animation1);
 
     scene.add(root);
   }, undefined, function (error) {
@@ -340,10 +371,12 @@ function chicken3(x, y, z, t){
 
     
     
-    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:scaling, z:scaling}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var chicken3Animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:scaling, z:scaling}, t);
+    chicken3Animation1.repeat(Infinity);
+    chicken3Animation1.yoyo(true);
+    chicken3Animation1.start();
+
+    animations.push(chicken3Animation1);
 
     scene.add(root);
   }, undefined, function (error) {
@@ -378,25 +411,29 @@ function chicken4(x, y, z, t){
     rightWing.rotation.z-=1*Math.PI;
     rightWing.rotation.y+=0.2*Math.PI;
     
-    var animation1 = new TWEEN.Tween(leftWing.rotation).to({x:leftWing.rotation.x,
+    var chicken4Animation1 = new TWEEN.Tween(leftWing.rotation).to({x:leftWing.rotation.x,
                                                             y:leftWing.rotation.y,
                                                             z:leftWing.rotation.z-0.4*Math.PI}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    chicken4Animation1.repeat(Infinity);
+    chicken4Animation1.yoyo(true);
+    chicken4Animation1.start();
 
-    var animation2 = new TWEEN.Tween(rightWing.rotation).to({x:rightWing.rotation.x,
+    var chicken4Animation2 = new TWEEN.Tween(rightWing.rotation).to({x:rightWing.rotation.x,
                                                              y:rightWing.rotation.y,
                                                              z:rightWing.rotation.z-0.4*Math.PI}, t);
-    animation2.repeat(Infinity);
-    animation2.yoyo(true);
-    animation2.start();
+    chicken4Animation2.repeat(Infinity);
+    chicken4Animation2.yoyo(true);
+    chicken4Animation2.start();
 
     
-    var animation3 = new TWEEN.Tween(head.position).to({x:head.position.x, y:head.position.y, z:0.05}, t);
-    animation3.repeat(Infinity);
-    animation3.yoyo(true);
-    animation3.start();
+    var chicken4Animation3 = new TWEEN.Tween(head.position).to({x:head.position.x, y:head.position.y, z:0.05}, t);
+    chicken4Animation3.repeat(Infinity);
+    chicken4Animation3.yoyo(true);
+    chicken4Animation3.start();
+
+    animations.push(chicken4Animation1);
+    animations.push(chicken4Animation2);
+    animations.push(chicken4Animation3);
 
     scene.add(root);
   }, undefined, function (error) {
@@ -421,15 +458,18 @@ function chicken5(x, y, z, t){
       }
     });
     
-    var animation1 = new TWEEN.Tween(root.scale).to({x:scaling*2, y:scaling*1.1, z:root.scale.z}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var chicken5Animation1 = new TWEEN.Tween(root.scale).to({x:scaling*2, y:scaling*1.1, z:root.scale.z}, t);
+    chicken5Animation1.repeat(Infinity);
+    chicken5Animation1.yoyo(true);
+    chicken5Animation1.start();
 
-    var animation2 = new TWEEN.Tween(root.rotation).to({x:-0.25*Math.PI, y:root.rotation.y, z:root.rotation.z}, t);
-    animation2.repeat(Infinity);
-    animation2.yoyo(true);
-    animation2.start();
+    var chicken5Animation2 = new TWEEN.Tween(root.rotation).to({x:-0.25*Math.PI, y:root.rotation.y, z:root.rotation.z}, t);
+    chicken5Animation2.repeat(Infinity);
+    chicken5Animation2.yoyo(true);
+    chicken5Animation2.start();
+
+    animations.push(chicken5Animation1);
+    animations.push(chicken5Animation2);
 
     scene.add(root);
   }, undefined, function (error) {
@@ -455,21 +495,25 @@ function pigeon1(x, y, z, t){
     });
 
     
-    var animation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:scaling, z:root.scale.z}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var pigeonAnimation1 = new TWEEN.Tween(root.scale).to({x:root.scale.x, y:scaling, z:root.scale.z}, t);
+    pigeonAnimation1.repeat(Infinity);
+    pigeonAnimation1.yoyo(true);
+    pigeonAnimation1.start();
 
-    var animation2 = new TWEEN.Tween(root.position).to({x:root.position.x, y: y + scaling*10, z:root.position.z}, t);
-    animation2.repeat(Infinity);
-    animation2.yoyo(true);
-    animation2.start();
+    var pigeonAnimation2 = new TWEEN.Tween(root.position).to({x:root.position.x, y: y + scaling*10, z:root.position.z}, t);
+    pigeonAnimation2.repeat(Infinity);
+    pigeonAnimation2.yoyo(true);
+    pigeonAnimation2.start();
 
-    var animation3 = new TWEEN.Tween(root.rotation).to({x:root.rotation.x, y: Math.PI*2, z:root.rotation.z}, t);
-    animation3.repeat(Infinity);
-    animation3.repeatDelay(t);
-    animation3.yoyo(true);
-    animation3.start();
+    var pigeonAnimation3 = new TWEEN.Tween(root.rotation).to({x:root.rotation.x, y: Math.PI*2, z:root.rotation.z}, t);
+    pigeonAnimation3.repeat(Infinity);
+    pigeonAnimation3.repeatDelay(t);
+    pigeonAnimation3.yoyo(true);
+    pigeonAnimation3.start();
+
+    animations.push(pigeonAnimation1);
+    animations.push(pigeonAnimation2);
+    animations.push(pigeonAnimation3);
 
     scene.add(root);
   }, undefined, function (error) {
@@ -499,10 +543,13 @@ function seal1(x, y, z, t){
     root.getObjectByName(a).rotation.x = -Math.PI*0.2;
     
     var neck =root.getObjectByName("Bone003_04")
-    var animation1 = new TWEEN.Tween(neck.rotation).to({x:Math.PI*0.2, y:-Math.PI*0.2, z:neck.rotation.z}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var sealAnimation1 = new TWEEN.Tween(neck.rotation).to({x:Math.PI*0.2, y:-Math.PI*0.2, z:neck.rotation.z}, t);
+    sealAnimation1.repeat(Infinity);
+    sealAnimation1.yoyo(true);
+    sealAnimation1.start();
+
+    animations.push(sealAnimation1);
+
     scene.add(root);
   }, undefined, function (error) {
     console.error(error);
@@ -536,26 +583,30 @@ function giraffe1(x, y, z, t){
     neck3.rotation.z = Math.PI*0.1;
     neck4.rotation.y = Math.PI*0.05;
 
-    var animation1 = new TWEEN.Tween(neck1.rotation).to({x:neck1.rotation.x, y:neck1.rotation.y, z:-Math.PI*0.05}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var giraffeAnimation1 = new TWEEN.Tween(neck1.rotation).to({x:neck1.rotation.x, y:neck1.rotation.y, z:-Math.PI*0.05}, t);
+    giraffeAnimation1.repeat(Infinity);
+    giraffeAnimation1.yoyo(true);
+    giraffeAnimation1.start();
 
-    var animation2 = new TWEEN.Tween(neck2.rotation).to({x:neck2.rotation.x, y:neck2.rotation.y, z:-Math.PI*0.07}, t);
-    animation2.repeat(Infinity);
-    animation2.yoyo(true);
-    animation2.start();
+    var giraffeAnimation2 = new TWEEN.Tween(neck2.rotation).to({x:neck2.rotation.x, y:neck2.rotation.y, z:-Math.PI*0.07}, t);
+    giraffeAnimation2.repeat(Infinity);
+    giraffeAnimation2.yoyo(true);
+    giraffeAnimation2.start();
 
-    var animation3 = new TWEEN.Tween(neck3.rotation).to({x:neck3.rotation.x, y:neck3.rotation.y, z:-Math.PI*0.1}, t);
-    animation3.repeat(Infinity);
-    animation3.yoyo(true);
-    animation3.start();
+    var giraffeAnimation3 = new TWEEN.Tween(neck3.rotation).to({x:neck3.rotation.x, y:neck3.rotation.y, z:-Math.PI*0.1}, t);
+    giraffeAnimation3.repeat(Infinity);
+    giraffeAnimation3.yoyo(true);
+    giraffeAnimation3.start();
 
-    var animation4 = new TWEEN.Tween(neck4.rotation).to({x:neck4.rotation.x, y:-Math.PI*0.05, z:neck4.rotation.z}, t);
-    animation4.repeat(Infinity);
-    animation4.yoyo(true);
-    animation4.start();
+    var giraffeAnimation4 = new TWEEN.Tween(neck4.rotation).to({x:neck4.rotation.x, y:-Math.PI*0.05, z:neck4.rotation.z}, t);
+    giraffeAnimation4.repeat(Infinity);
+    giraffeAnimation4.yoyo(true);
+    giraffeAnimation4.start();
 
+    animations.push(giraffeAnimation1);
+    animations.push(giraffeAnimation2);
+    animations.push(giraffeAnimation3);
+    animations.push(giraffeAnimation4);
     scene.add(root);
   }, undefined, function (error) {
     console.error(error);
@@ -581,17 +632,19 @@ function elephant1(x, y, z, t){
     });
 
     var rightEar = root.getObjectByName("Elephant_BabyMeshbone_R_ear_00_15");
-    var animation1 = new TWEEN.Tween(rightEar.rotation).to({x:rightEar.rotation.x, y:rightEar.rotation.y, z:-Math.PI*0.4}, t);
-    animation1.repeat(Infinity);
-    animation1.yoyo(true);
-    animation1.start();
+    var elephantAnimation1 = new TWEEN.Tween(rightEar.rotation).to({x:rightEar.rotation.x, y:rightEar.rotation.y, z:-Math.PI*0.4}, t);
+    elephantAnimation1.repeat(Infinity);
+    elephantAnimation1.yoyo(true);
+    elephantAnimation1.start();
     
     var leftEar = root.getObjectByName("Elephant_BabyMeshbone_L_ear_00_21");
-    var animation2 = new TWEEN.Tween(leftEar.rotation).to({x:leftEar.rotation.x, y:leftEar.rotation.y, z:-Math.PI*0.4}, t);
-    animation2.repeat(Infinity);
-    animation2.yoyo(true);
-    animation2.start();
+    var elephantAnimation2 = new TWEEN.Tween(leftEar.rotation).to({x:leftEar.rotation.x, y:leftEar.rotation.y, z:-Math.PI*0.4}, t);
+    elephantAnimation2.repeat(Infinity);
+    elephantAnimation2.yoyo(true);
+    elephantAnimation2.start();
 
+    animations.push(elephantAnimation1);
+    animations.push(elephantAnimation2);
     scene.add(root);
   }, undefined, function (error) {
     console.error(error);
@@ -664,6 +717,12 @@ function myTribune(){
   });
 }
 
+function stopAnimations(){
+  for(var i = 0; i < animations.length ; i++){
+    animations[i].stop();
+  }
+}
+
 function myRaccoon(z, load = false, me = false){
   gltfLoader.load('./racoon2/scene.gltf', function (gltf){
     const root = gltf.scene;
@@ -713,14 +772,19 @@ function myRacconCursor() {
   myRacconCursorMesh.position.x = -140/2 + 0.7;
   myRacconCursorMesh.position.y = 3.5;
   myRacconCursorMesh.position.z = 4.5;
-  var animation1 = new TWEEN.Tween(myRacconCursorMesh.position).to({x: myRacconCursorMesh.position.x, y:3, z: myRacconCursorMesh.position.z}, 1300);
-  animation1.repeat(Infinity);
-  animation1.yoyo(true);
-  animation1.start();
-  var animation2 = new TWEEN.Tween(myRacconCursorMesh.rotation).to({x: myRacconCursorMesh.rotation.x, y:-Math.PI, z: myRacconCursorMesh.rotation.z}, 2000);
-  animation2.repeat(Infinity);
-  animation2.yoyo(true);
-  animation2.start();
+  var cursorAnimation1 = new TWEEN.Tween(myRacconCursorMesh.position).to({x: myRacconCursorMesh.position.x, y:3, z: myRacconCursorMesh.position.z}, 1300);
+  cursorAnimation1.repeat(Infinity);
+  cursorAnimation1.yoyo(true);
+  cursorAnimation1.start();
+
+  var cursorAnimation2 = new TWEEN.Tween(myRacconCursorMesh.rotation).to({x: myRacconCursorMesh.rotation.x, y:-Math.PI, z: myRacconCursorMesh.rotation.z}, 2000);
+  cursorAnimation2.repeat(Infinity);
+  cursorAnimation2.yoyo(true);
+  cursorAnimation2.start();
+
+  animations.push(cursorAnimation1);
+  animations.push(cursorAnimation2);
+
   scene.add(myRacconCursorMesh);
 }
 
@@ -1062,41 +1126,52 @@ function walkRaccoon(time) {
   // if ((time - startingTime) >= 3) print("VIA!");
 
   if(raccoonLoaded && (time - startingTime) >= 3){
-    // camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
-    // camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
+    var finish = true;
+    for(var i = 0; i < raccoons.length; i++){
+      if(raccoons[i][0].position.x > 69.3){
+        finish = false;
+      }
+    }
+    if (finish){
+      // camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
+      // camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
 
-    // controls.target.set(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
-    // controls.update();
-    myRacconCursorMesh.position.x = raccoons[0][0].position.x;
-    for (var i = 0; i < raccoons.length; i++) {
-      var step = 3/legStepsAnimation[i];
-      raccoons[i][0].position.x += step*barSpeedF(i);
+      // controls.target.set(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
+      // controls.update();
+      myRacconCursorMesh.position.x = raccoons[0][0].position.x;
+      for (var i = 0; i < raccoons.length; i++) {
+        var step = 3/legStepsAnimation[i];
+        raccoons[i][0].position.x += step*barSpeedF(i);
 
-      walkFrontShoulderLeft(i);
-      walkFrontShoulderRight(i);
-      walkFrontShinRight(i);
-      walkFrontShinLeft(i);
-      
-      walkFrontFootLeft(i);
-      walkFrontFootRight(i);
-  
-      walkBackThighLeft(i);
-      walkBackThighRight(i);
-      
-      walkBackShin(i);
-      
-      walkBackFootLeft(i);
-      walkBackFootRight(i);    
-      
-      walkSpine(i);
-  
-      walkRibCage(i);
-  
-      walkNeck(i);
-  
-      tail(i);
-  
-      yoyo(i);
+        walkFrontShoulderLeft(i);
+        walkFrontShoulderRight(i);
+        walkFrontShinRight(i);
+        walkFrontShinLeft(i);
+        
+        walkFrontFootLeft(i);
+        walkFrontFootRight(i);
+    
+        walkBackThighLeft(i);
+        walkBackThighRight(i);
+        
+        walkBackShin(i);
+        
+        walkBackFootLeft(i);
+        walkBackFootRight(i);    
+        
+        walkSpine(i);
+    
+        walkRibCage(i);
+    
+        walkNeck(i);
+    
+        tail(i);
+    
+        yoyo(i);
+      }
+    } else{
+      stopAnimations();
+      myRacconCursorMesh.position.x = raccoons[0][0].position.x;
     }
   }
 }
