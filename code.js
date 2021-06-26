@@ -13,7 +13,7 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 const loadingManager = new THREE.LoadingManager();
 const scene = new THREE.Scene();
 var gltfLoader = new GLTFLoader(loadingManager);
-const controls = new OrbitControls(camera, document.querySelector('.parent'));
+// const controls = new OrbitControls(camera, document.querySelector('.parent'));
 var myRacconCursorMesh;
 var raccoons = [];
 var raccoonLoaded = false;
@@ -24,6 +24,8 @@ var speed = [];
 var barSpeed = 0;
 var maxSpeed = 1.75;
 var animations = [];
+// var balloons = [];
+const balloons = new THREE.Group();
 
 loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
 	
@@ -35,6 +37,7 @@ loadingManager.onLoad = function ( ) {
   var div2 = document.createElement('div');
   var html = '<div id = "A" class="ng-binding"> <b>A</b> </div> <div id = "S" class="ng-binding">   <b>S</b> </div> <div id = "progressBar-align" class="container">    <div class="progress">      <div id = "speedBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%"></div>  </div>  </div>';
 	createCanvas(orbitDiv, div, div2, html);
+  // play("./balloonExplosion1.wav", 0.05, true); // secondo me va messo qui con tutti gli audio dopo che si clicca play
 };
 
 loadingManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
@@ -769,6 +772,7 @@ function myRaccoon(z, load = false, me = false){
     raccoonStartPosition(root, otherSpeed)
 
     scene.add(root);
+    
     raccoonLoaded = load;
   }, undefined, function (error) {
     console.error(error);
@@ -818,12 +822,13 @@ function myDirectionalLight(){
   light.position.set(100, 50, 0);
   light.target.position.set(0, 0, 0);
   light.castShadow = true;
-  light.shadow.camera.top = 300;
-  light.shadow.camera.bottom = -300;
-  light.shadow.camera.right = 300;
-  light.shadow.camera.left = -300;
+  light.shadow.camera.top = 100;
+  light.shadow.camera.bottom = -100;
+  light.shadow.camera.right = 100;
+  light.shadow.camera.left = -100;
   light.shadow.mapSize.width = 20000;
   light.shadow.mapSize.height = 20000;
+  light.shadow.bias = -0.0005;
 
   const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
   scene.add(cameraHelper);
@@ -857,6 +862,65 @@ function createCanvas(orbitDiv, div, div2, html){
   orbitDiv.appendChild(div);
 }
 
+
+function myBallon() {
+  gltfLoader.load('./balloon/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    root.scale.multiplyScalar(0.02); 
+    root.position.x = (Math.random() - 0.5)*4; 
+    root.position.y = 2 + Math.random()*4;
+    root.position.z = 4 + (Math.random() - 0.5)*4;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
+      } 
+    });
+  
+    var balloon = root.getObjectByName("Balloon_ballon_0");
+    balloon.material.color.r = Math.random();
+    balloon.material.color.g = Math.random();
+    balloon.material.color.b = Math.random();
+    balloon.material.opacity = 0.8;
+    balloon.material.transparent = true;
+    balloons.add(root)
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function play(audio, volume, loop = false) { 
+  const listener = new THREE.AudioListener();
+  camera.add( listener );
+  const sound = new THREE.Audio( listener );
+  const audioLoader = new THREE.AudioLoader();
+  audioLoader.load(audio, function( buffer ) {
+    sound.setBuffer( buffer );
+    sound.setLoop(loop);
+    sound.setVolume(volume);
+    sound.play();
+  });
+}
+
+function onclick(event) {
+  var selectedObject;
+  var raycaster = new THREE.Raycaster();
+  var mouse = new THREE.Vector2();
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  var intersects = raycaster.intersectObjects(balloons.children, true); //array
+  if (intersects.length > 0) {
+    selectedObject = intersects[0].object;
+    while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
+    var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
+    play("./balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
+    balloons.remove(selectedObject);
+  }
+}
+
 function init(){
   renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
@@ -869,12 +933,11 @@ function init(){
   
   renderer.shadowMap.enabled = true;
   camera.position.set(0, 10, 20);
-  controls.target.set(0, 0, 0);
+  // controls.target.set(0, 0, 0);
   // camera.position.set(0, 10, -50);
   // controls.target.set(0, 0, -50);
-  controls.update();
+  // controls.update();
   scene.background = new THREE.Color("green");
-  renderer.shadowMap.enabled = true;
   var onKeyDown = function(event) {
     switch(event.keyCode){
       case 65:
@@ -899,11 +962,26 @@ function init(){
   // sBoxHtml = document.getElementById("S");
   // barHtml = document.getElementById("speedBar");
   
+  document.addEventListener("click", onclick, true);
+
+  scene.add(balloons)
+
+
+
   myEmisphereLight();
   myDirectionalLight();
   trackField();
 
   myRacconCursor();
+  
+  myBallon();
+  myBallon();
+  myBallon();
+  myBallon();
+  myBallon();
+  myBallon();
+  myBallon();
+  myBallon();
 
   myRaccoon(4.5, false, true);
   requestAnimationFrame(render);
@@ -1229,9 +1307,14 @@ function walkRaccoon(time) {
     } else{
       stopAnimations();
       myRacconCursorMesh.position.x = raccoons[0][0].position.x;
+      // if (finishAudio) {
+      //   finishAudio = false;
+      //   play("./balloonExplosion1.wav", 0.05, true);
+      // }
     }
   }
 }
+// var finishAudio = true;
 
 function walkFrontShoulderLeft(i) {
   var shoulderLStep = {x: changeShoulderL[i].x/legStepsAnimation[i], z: changeShoulderL[i].z/legStepsAnimation[i]};
