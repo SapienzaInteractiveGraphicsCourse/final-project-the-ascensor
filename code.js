@@ -4,15 +4,15 @@ import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/thre
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js';
 
 const canvas = document.querySelector("#c");
-const renderer = new THREE.WebGLRenderer({canvas});
+var renderer;
 const fov = 45;
 const near = 0.01;
 const far = 1000;
 const aspect = 2;
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+const loadingManager = new THREE.LoadingManager();
 const scene = new THREE.Scene();
-const loader = new THREE.TextureLoader();
-const gltfLoader = new GLTFLoader();
+var gltfLoader = new GLTFLoader(loadingManager);
 const controls = new OrbitControls(camera, document.querySelector('.parent'));
 var myRacconCursorMesh;
 var raccoons = [];
@@ -23,10 +23,33 @@ var s = false;
 var speed = [];
 var barSpeed = 0;
 var maxSpeed = 1.75;
+var animations = [];
+
+loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+	
+};
+
+loadingManager.onLoad = function ( ) {
+  var orbitDiv = document.getElementById("orbitDiv");
+  var div = document.createElement('div');
+  var div2 = document.createElement('div');
+  var html = '<div id = "A" class="ng-binding"> <b>A</b> </div> <div id = "S" class="ng-binding">   <b>S</b> </div> <div id = "progressBar-align" class="container">    <div class="progress">      <div id = "speedBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%"></div>  </div>  </div>';
+	createCanvas(orbitDiv, div, div2, html);
+};
+
+loadingManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+  document.getElementById("orbitDiv").innerHTML = "loading ";
+};
+
+loadingManager.onError = function ( url ) {
+};
+
+
+var loader = new THREE.TextureLoader(loadingManager);
+
 
 // var cursorAnimation1;
 // var cursorAnimation2;
-var animations = [];
 // var elephantAnimation1 = [];
 // var elephantAnimation2 = [];
 // var giraffeAnimation1;
@@ -811,7 +834,39 @@ function myDirectionalLight(){
   scene.add(light.target);
 }
 
+function createStyleCss(style , head, css){
+  head.appendChild(style);
+
+  style.type = 'text/css';
+  if (style.styleSheet){
+    // This is required for IE8 and below.
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+function createCanvas(orbitDiv, div, div2, html){
+  orbitDiv.innerHTML= "";
+  div2.setAttribute("id","hud");
+  div2.setAttribute("ng-class","{visible: style.visible");
+  div2.setAttribute("class","visible");
+  div2.innerHTML= html;
+  div.appendChild(renderer.domElement);
+  div.appendChild(div2);
+  orbitDiv.appendChild(div);
+}
+
 function init(){
+  renderer = new THREE.WebGLRenderer( { antialias: true } );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  
+  var css = 'html, body {  margin: 0;  height: 100%;} #customControls { margin-left: 20px; z-index: 2;} #progressBar-align { position: relative; width: 854px; height: 200px;margin: auto;} #hud { position: absolute;top: 0;width: 100%;height: 100%;margin: auto;z-index: 3;display: none;} #hud.visible { display: block;} #A, #S{ position: absolute; border: 3px solid #FFF; border-radius: 5px; color: #FFF; font-family: arial;} #A { bottom: 10px; left: 10px; width: 80pt; text-align: center; background: #AA3333; font-size: 50pt; font-weight: bold; padding: 5px;} #S { bottom: 10px; left: 120px; width: 80pt; text-align: center; background: #3333AA; font-size: 50pt; font-weight: bold;padding: 5px;} #stats { float: right;}';
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  createStyleCss(style, head, css);
+  
   renderer.shadowMap.enabled = true;
   camera.position.set(0, 10, 20);
   controls.target.set(0, 0, 0);
@@ -851,6 +906,7 @@ function init(){
   myRacconCursor();
 
   myRaccoon(4.5, false, true);
+  requestAnimationFrame(render);
   setTimeout(() => {
     myRaccoon(2.25);
     setTimeout(() => {
@@ -1125,6 +1181,7 @@ function walkRaccoon(time) {
   // if ((time - startingTime) >= 2 && (time - startingTime) <= 3) print(1);
   // if ((time - startingTime) >= 3) print("VIA!");
 
+  // var container = document.getElementById("container");
   if(raccoonLoaded && (time - startingTime) >= 3){
     var finish = true;
     for(var i = 0; i < raccoons.length; i++){
