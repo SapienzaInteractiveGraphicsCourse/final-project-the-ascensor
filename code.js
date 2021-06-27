@@ -31,16 +31,58 @@ loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
 };
 
 loadingManager.onLoad = function ( ) {
-  var orbitDiv = document.getElementById("orbitDiv");
-  var div = document.createElement('div');
-  var div2 = document.createElement('div');
-  var html = '<div id = "A" class="ng-binding"> <b>A</b> </div> <div id = "S" class="ng-binding">   <b>S</b> </div> <div id = "progressBar-align" class="container">    <div class="progress">      <div id = "speedBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%"></div>  </div>  </div>';
-	createCanvas(orbitDiv, div, div2, html);
-  // play("./balloonExplosion1.wav", 0.05, true); // secondo me va messo qui con tutti gli audio dopo che si clicca play
+  // var orbitDiv = document.getElementById("orbitDiv");
+  // var div = document.createElement('div');
+  // var div2 = document.createElement('div');
+  // var html = '<div id = "A" class="ng-binding"> <b>A</b> </div> <div id = "S" class="ng-binding">  <b>S</b> </div> <div id = "progressBar-align" class="container">    <div class="progress">      <div id = "speedBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%"></div>  </div>  </div>';
+	// createCanvas(orbitDiv, div, div2, html);
+  var button = document.createElement("button");
+  button.setAttribute("id", "button1");
+  button.innerHTML = "Play!";
+  document.getElementById("clickText").innerHTML="";
+  document.getElementById("clickText").appendChild(button);
+  button.addEventListener("click", function() {
+    var orbitDiv = document.getElementById("orbitDiv");
+    var div = document.createElement('div');
+    var div2 = document.createElement('div');
+    var html =  '<table width= 100% >' +
+                  '<tr>' +
+                    '<td id = "td2">'  +
+                      'posizione' +
+                    '</td>' +
+                    '<td id = "td1">' +
+                      '<div class="meter">' +
+                        '<span id = "speedBar" align = "center" style="width: 50%; font-family: Copperplate, Papyrus, fantasy; font-size: 30px">' +
+                          "50%" + 
+                        '</span>' +
+                      '</div>' +
+                    '</td>' +
+                    '<td id = "td2">' +
+                      'tempo' +
+                    '</td>' +
+                  '</tr>' +
+                '</table>' +
+                '<div id = "A" class="ng-binding">' +
+                  '<b>A</b>' +
+                '</div>' +
+                '<div id = "S" class="ng-binding">' +
+                  '<b>S</b>' +
+                '</div>';
+    createCanvas(orbitDiv, div, div2, html);
+    //play("./balloonExplosion1.wav", 0.05, true); // secondo me va messo qui con tutti gli audio dopo che si clicca play
+  }, false);
 };
 
 loadingManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
-  document.getElementById("orbitDiv").innerHTML = "loading ";
+  // var orbitDiv = document.getElementById("orbitDiv");
+  // var loading = document.createElement('div');
+  // var divText = document.createElement('div');
+  // loading.setAttribute("class", "loader");
+  // divText.setAttribute("align", "center");
+  // divText.setAttribute("style", "padding: 10px; font-size: 30px");
+  // divText.innerHTML = "Loading...";
+  // loading.appendChild(divText);
+  // orbitDiv.appendChild(loading);
 };
 
 loadingManager.onError = function ( url ) {
@@ -48,7 +90,6 @@ loadingManager.onError = function ( url ) {
 
 
 var loader = new THREE.TextureLoader(loadingManager);
-
 
 // var cursorAnimation1;
 // var cursorAnimation2;
@@ -85,7 +126,7 @@ function trackField(){
   var trackTexture = './textures/runningTrackField.png';
   var grassTexture = './textures/grass.png';
 
-  myPlane(200, 200, grassTexture, 0, -0.1, 0, 1, 40, false, true);
+  myPlane(600, 600, grassTexture, 0, -0.1, 0, 1, 120, false, true);
 
   myPlane((5*height + 6*lineHeigth), lineHeigth, trackTexture, (-1/2)*(width + lineHeigth), 0, 0, (height / lineHeigth), repeatEndLines, true);
 
@@ -109,6 +150,14 @@ function trackField(){
 
   myTribune();
 
+}
+
+function fog() {
+  const near = 1;
+  const far = 500;
+  const color = '#62cff4';
+  scene.fog = new THREE.Fog(color, near, far);
+  scene.background = new THREE.Color(color);
 }
 
 function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, grass = false){
@@ -838,18 +887,6 @@ function myDirectionalLight(){
   scene.add(light.target);
 }
 
-function createStyleCss(style , head, css){
-  head.appendChild(style);
-
-  style.type = 'text/css';
-  if (style.styleSheet){
-    // This is required for IE8 and below.
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-}
-
 function createCanvas(orbitDiv, div, div2, html){
   orbitDiv.innerHTML= "";
   div2.setAttribute("id","hud");
@@ -964,10 +1001,63 @@ function init(){
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   
-  var css = 'html, body {  margin: 0;  height: 100%;} #customControls { margin-left: 20px; z-index: 2;} #progressBar-align { position: relative; width: 854px; height: 200px;margin: auto;} #hud { position: absolute;top: 0;width: 100%;height: 100%;margin: auto;z-index: 3;display: none;} #hud.visible { display: block;} #A, #S{ position: absolute; border: 3px solid #FFF; border-radius: 5px; color: #FFF; font-family: arial;} #A { bottom: 10px; left: 10px; width: 80pt; text-align: center; background: #AA3333; font-size: 50pt; font-weight: bold; padding: 5px;} #S { bottom: 10px; left: 120px; width: 80pt; text-align: center; background: #3333AA; font-size: 50pt; font-weight: bold;padding: 5px;} #stats { float: right;}';
-  var head = document.head || document.getElementsByTagName('head')[0];
-  var style = document.createElement('style');
-  createStyleCss(style, head, css);
+  // var css = "html, body {  margin: 0;  height: 100%;} #customControls { margin-left: 20px; z-index: 2;}" + 
+  //   ".loader {" +
+  //   "position: fixed;" +
+  //   "left: 0px;" +
+  //   "top: 0px;" + 
+  //   "width: 100%;" +
+  //   "height: 100%;" +
+  //   "background: url('./raccoonLoading.gif');" +
+  //   "background-color: rgb(254,68,0);" +
+  //   "background-position: center;" +
+  //   "background-repeat: no-repeat;" +
+  //   "background-size: 960px 720px;" +
+  //   "margin: auto;" +
+  //   "}" + 
+  //   "#progressBar-align" +
+  //   "{ position: relative; " +
+  //   "width: 854px; " +
+  //   "height: 200px;" +
+  //   "margin: auto;}" +
+  //   "#hud {" +
+  //   "position: absolute;" +
+  //   "top: 0;" +
+  //   "width: 100%;" +
+  //   "height: 100%;" +
+  //   "margin: auto;" +
+  //   "z-index: 3;" +
+  //   "display: none;} " +
+  //   "#hud.visible { " +
+  //   "display: block;}"  +
+  //   "#A, #S{ " +
+  //   "position: absolute; " + 
+  //   "border: 3px solid #FFF;" +
+  //   "border-radius: 5px;" +
+  //   "color: #FFF;" +
+  //   "font-family: arial;} " +
+  //   "#A { " +
+  //   "bottom: 10px;" +
+  //   "left: 10px;" +
+  //   "width: 80pt;"  +
+  //   "text-align: center; " +
+  //   "background: #AA3333; " +
+  //   "font-size: 50pt;"  +
+  //   "font-weight: bold;"  +
+  //   "padding: 5px;} " +
+  //   "#S { " +
+  //   "bottom: 10px; " +
+  //   "left: 120px;" +
+  //   "width: 80pt;"  +
+  //   "text-align: center;" +
+  //   "background: #3333AA;" +
+  //   "font-size: 50pt;" +
+  //   "font-weight: bold;" +
+  //   "padding: 5px;}" +
+  //   "#stats { float: right;};"
+  // var head = document.head || document.getElementsByTagName('head')[0];
+  // var style = document.createElement('style');
+  // createStyleCss(style, head, css);
   
   renderer.shadowMap.enabled = true;
   camera.position.set(0, 10, 20);
@@ -975,8 +1065,11 @@ function init(){
   // camera.position.set(0, 10, -50);
   // controls.target.set(0, 0, -50);
   // controls.update();
-  scene.background = new THREE.Color("green");
+  scene.background = new THREE.Color("lightblue");
   scene.add(balloons)
+  fog();
+  window.addEventListener( 'resize', onWindowResize, false );
+
   var onKeyDown = function(event) {
     switch(event.keyCode){
       case 65:
@@ -1041,15 +1134,24 @@ function init(){
   }, 2000);
 }
 
+
+function onWindowResize() {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
 function resizeRendererToDisplaySize(renderer) {
-  const canvas = renderer.domElement;
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
-  const needResize = canvas.width !== width || canvas.height !== height;
-  if (needResize) {
-    renderer.setSize(width, height, false);
-  }
-  return needResize;
+  // const canvas = renderer.domElement;
+  // const width = canvas.clientWidth;
+  // const height = canvas.clientHeight;
+  // const needResize = canvas.width !== width || canvas.height !== height;
+  // if (needResize) {
+  //   renderer.setSize(width, height, false);
+  // }
+  // return needResize;
 }
 
 // function switchColor(target, attribute, colorString){
@@ -1076,12 +1178,12 @@ function render(time) {
   //   switchColor(sBoxHtml, "style", "background: #3333AA")
   // }
 
-  resizeRendererToDisplaySize(renderer);
-  {
-    const canvas = renderer.domElement;
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
-  }
+  // resizeRendererToDisplaySize(renderer);
+  // {
+  //   const canvas = renderer.domElement;
+  //   camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  //   camera.updateProjectionMatrix();
+  // }
 
   barSpeed -= 0.001;
   if(barSpeed < 0) barSpeed = 0;
