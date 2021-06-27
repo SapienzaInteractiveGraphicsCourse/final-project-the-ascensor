@@ -13,7 +13,7 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 const loadingManager = new THREE.LoadingManager();
 const scene = new THREE.Scene();
 var gltfLoader = new GLTFLoader(loadingManager);
-// const controls = new OrbitControls(camera, document.querySelector('.parent'));
+const controls = new OrbitControls(camera, document.querySelector('.parent'));
 var myRacconCursorMesh;
 var raccoons = [];
 var raccoonLoaded = false;
@@ -24,7 +24,6 @@ var speed = [];
 var barSpeed = 0;
 var maxSpeed = 1.75;
 var animations = [];
-// var balloons = [];
 const balloons = new THREE.Group();
 
 loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -867,9 +866,10 @@ function myBallon() {
   gltfLoader.load('./balloon/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(0.02); 
-    root.position.x = (Math.random() - 0.5)*4; 
-    root.position.y = 2 + Math.random()*4;
-    root.position.z = 4 + (Math.random() - 0.5)*4;
+    root.position.x = -500;
+    // root.position.x = raccoons[0][0].position.x + (Math.random() - 0.5)*4; 
+    // root.position.y = 2 + Math.random()*4;
+    // root.position.z = 4 + (Math.random() - 0.5)*4;
   
     root.traverse((object) => {
       if (object.isMesh){
@@ -885,7 +885,9 @@ function myBallon() {
     balloon.material.color.b = Math.random();
     balloon.material.opacity = 0.8;
     balloon.material.transparent = true;
-    balloons.add(root)
+
+    balloons.add(root);
+    balloonToSpawn.push(root)
   }, undefined, function (error) {
     console.error(error);
   });
@@ -921,6 +923,42 @@ function onclick(event) {
   }
 }
 
+var balloonToSpawn = [];
+var spawnBalloonBoolean = [true, true, true, true, true];
+
+function spawnBalloon(i, time) {
+  if (time > (i+1)*2 && spawnBalloonBoolean[i]) {
+    spawnBalloonBoolean[i] = false
+    balloonToSpawn[i].position.x = raccoons[0][0].position.x + (Math.random() - 0.5)*15;
+    balloonToSpawn[i].position.y = 2 + Math.random()*4;
+    var random = Math.random()-0.5;
+    var front = 1;
+    if (random < 0) front = -1;
+    balloonToSpawn[i].position.z = 20*(front) + (front)*(Math.random() - 0.5)*15;
+    var balloon = balloonToSpawn[i].getObjectByName("Balloon_ballon_0");
+    var animation1 = new TWEEN.Tween(balloon.scale).to({x:balloon.scale.x, y:0.5, z:balloon.scale.z}, 1000);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+    var animation2 = new TWEEN.Tween(balloon.position).to({x:balloon.position.x, y:balloon.position.y + 50, z:balloon.position.z}, 1000);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true);
+    animation2.start();
+    var animation3 = new TWEEN.Tween(balloonToSpawn[i].position).to({x:raccoons[0][0].position.x, y:50, z:balloonToSpawn[i].position.z}, 15000*(Math.random()+0.3));
+    animation3.onUpdate(function() {
+      if (balloonToSpawn[i].position.y > 45){
+        animation3.stop();
+        balloons.remove(balloonToSpawn[i]);
+      }
+    });
+    animation3.start();
+
+    animations.push(animation1);
+    animations.push(animation2);
+    animations.push(animation3);
+  } 
+}
+
 function init(){
   renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
@@ -933,11 +971,12 @@ function init(){
   
   renderer.shadowMap.enabled = true;
   camera.position.set(0, 10, 20);
-  // controls.target.set(0, 0, 0);
+  controls.target.set(0, 0, 0);
   // camera.position.set(0, 10, -50);
   // controls.target.set(0, 0, -50);
   // controls.update();
   scene.background = new THREE.Color("green");
+  scene.add(balloons)
   var onKeyDown = function(event) {
     switch(event.keyCode){
       case 65:
@@ -964,7 +1003,6 @@ function init(){
   
   document.addEventListener("click", onclick, true);
 
-  scene.add(balloons)
 
 
 
@@ -974,14 +1012,14 @@ function init(){
 
   myRacconCursor();
   
-  myBallon();
-  myBallon();
-  myBallon();
-  myBallon();
-  myBallon();
-  myBallon();
-  myBallon();
-  myBallon();
+  // myBallon();
+  // myBallon();
+  // myBallon();
+  // myBallon();
+  // myBallon();
+  // myBallon();
+  // myBallon();
+  // myBallon();
 
   myRaccoon(4.5, false, true);
   requestAnimationFrame(render);
@@ -998,6 +1036,7 @@ function init(){
     }, 500);
   }, 500);
   setTimeout(() => {
+    for (var i = 0; i < spawnBalloonBoolean.length; i++) myBallon();
     requestAnimationFrame(render);
   }, 2000);
 }
@@ -1237,7 +1276,6 @@ var start2CameraX = -60;
 var one = true;
 var startingTime;
 
-
 function walkRaccoon(time) {
   // if (start1Camera < 4.5) {
   //   start1Camera += step1Camera;
@@ -1273,6 +1311,9 @@ function walkRaccoon(time) {
 
       // controls.target.set(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
       // controls.update();
+      var timeInSecond = Math.round(time - startingTime - 3)
+      print(timeInSecond)
+      for (var i = 0; i < spawnBalloonBoolean.length; i ++) spawnBalloon(i, timeInSecond); 
       myRacconCursorMesh.position.x = raccoons[0][0].position.x;
       for (var i = 0; i < raccoons.length; i++) {
         var step = 3/legStepsAnimation[i];
