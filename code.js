@@ -13,17 +13,23 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 const loadingManager = new THREE.LoadingManager();
 const scene = new THREE.Scene();
 var gltfLoader = new GLTFLoader(loadingManager);
-const controls = new OrbitControls(camera, document.querySelector('.parent'));
+// const controls = new OrbitControls(camera, document.querySelector('.parent'));
 var myRacconCursorMesh;
 var raccoons = [];
 var raccoonLoaded = false;
 var bone2Animation;
 var a = false;
-var s = false;
+var d = false;
 var speed = [];
 var barSpeed = 0;
 var maxSpeed = 1.75;
 var animations = [];
+var allReady = false;
+var loadV = true;
+var barSpeedReset = true;
+var boostBalloon = 0;
+var position = 1;
+var timePassed = "00:00";
 const balloons = new THREE.Group();
 
 loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -31,46 +37,52 @@ loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
 };
 
 loadingManager.onLoad = function ( ) {
-  // var orbitDiv = document.getElementById("orbitDiv");
-  // var div = document.createElement('div');
-  // var div2 = document.createElement('div');
-  // var html = '<div id = "A" class="ng-binding"> <b>A</b> </div> <div id = "S" class="ng-binding">  <b>S</b> </div> <div id = "progressBar-align" class="container">    <div class="progress">      <div id = "speedBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%"></div>  </div>  </div>';
-	// createCanvas(orbitDiv, div, div2, html);
-  var button = document.createElement("button");
-  button.setAttribute("id", "button1");
-  button.innerHTML = "Play!";
-  document.getElementById("clickText").innerHTML="";
-  document.getElementById("clickText").appendChild(button);
-  button.addEventListener("click", function() {
-    var orbitDiv = document.getElementById("orbitDiv");
-    var div = document.createElement('div');
-    var div2 = document.createElement('div');
-    var html =  '<table width= 100% >' +
-                  '<tr>' +
-                    '<td id = "td2">'  +
-                      'posizione' +
-                    '</td>' +
-                    '<td id = "td1">' +
-                      '<div class="meter">' +
-                        '<span id = "speedBar" align = "center" style="width: 50%; font-family: Copperplate, Papyrus, fantasy; font-size: 30px">' +
-                          "50%" + 
-                        '</span>' +
-                      '</div>' +
-                    '</td>' +
-                    '<td id = "td2">' +
-                      'tempo' +
-                    '</td>' +
-                  '</tr>' +
-                '</table>' +
-                '<div id = "A" class="ng-binding">' +
-                  '<b>A</b>' +
-                '</div>' +
-                '<div id = "S" class="ng-binding">' +
-                  '<b>S</b>' +
-                '</div>';
-    createCanvas(orbitDiv, div, div2, html);
-    //play("./balloonExplosion1.wav", 0.05, true); // secondo me va messo qui con tutti gli audio dopo che si clicca play
-  }, false);
+  if(loadV){
+    loadV = false;
+    var button = document.createElement("button");
+    button.setAttribute("id", "button1");
+    button.innerHTML = "Play!";
+    document.getElementById("clickText").innerHTML="";
+    document.getElementById("clickText").appendChild(button);
+    button.addEventListener("click", function() {
+      var orbitDiv = document.getElementById("orbitDiv");
+      var div = document.createElement('div');
+      var div2 = document.createElement('div');
+      var html =  '<table width= 100%>' +
+                    '<colgroup>' +
+                      '<col span="1" style="width: 25%;">' +
+                      '<col span="1" style="width: 50%;">' +
+                      '<col span="1" style="width: 25%;">' +
+                    '</colgroup>' +
+                    '<tbody>' +
+                      '<tr>' +
+                        '<td id = "td2">'  +
+                          'Position: ' + position + '°' +
+                        '</td>' +
+                        '<td id = "td1">' +
+                          '<div class="meter">' +
+                            '<span id = "speedBar" align = "center" style="width: 0%; font-family: Copperplate, Papyrus, fantasy; font-size: 30px">' +
+                              "<b>" + 0 + "%</b>" + 
+                            '</span>' +
+                          '</div>' +
+                        '</td>' +
+                        '<td id = "td3">' +
+                          'Time: ' + timePassed +
+                        '</td>' +
+                      '</tr>' +
+                    '</tbody>' +
+                  '</table>' +
+                  '<div id = "A" class="ng-binding">' +
+                    '<b>A</b>' +
+                  '</div>' +
+                  '<div id = "D" class="ng-binding">' +
+                    '<b>D</b>' +
+                  '</div>';
+        createCanvas(orbitDiv, div, div2, html);
+        //play("./balloonExplosion1.wav", 0.05, true); // secondo me va messo qui con tutti gli audio dopo che si clicca play
+        allReady = true;
+    }, false); 
+  }
 };
 
 loadingManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
@@ -112,10 +124,6 @@ var loader = new THREE.TextureLoader(loadingManager);
 // var chicken1Animation2;
 // var headDinoAnimation;
 // var tailAnimations = [];
-
-var aBoxHtml;
-var sBoxHtml;
-var barHtml;
 
 function trackField(){
   var width = 140;
@@ -956,6 +964,7 @@ function onclick(event) {
     while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
     play("./balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
+    boostBalloon += 0.2;
     balloons.remove(selectedObject);
   }
 }
@@ -966,12 +975,12 @@ var spawnBalloonBoolean = [true, true, true, true, true];
 function spawnBalloon(i, time) {
   if (time > (i+1)*2 && spawnBalloonBoolean[i]) {
     spawnBalloonBoolean[i] = false
-    balloonToSpawn[i].position.x = raccoons[0][0].position.x + (Math.random() - 0.5)*15;
-    balloonToSpawn[i].position.y = 2 + Math.random()*4;
-    var random = Math.random()-0.5;
-    var front = 1;
-    if (random < 0) front = -1;
-    balloonToSpawn[i].position.z = 20*(front) + (front)*(Math.random() - 0.5)*15;
+    balloonToSpawn[i].position.x = raccoons[0][0].position.x + 3 +(Math.random() - 0.5)*5;
+    balloonToSpawn[i].position.y = 0;
+    // var random = Math.random()-0.5;
+    // var front = 1;
+    // if (random < 0) front = -1;
+    balloonToSpawn[i].position.z = -10 - (Math.random() - 0.5)*8;
     var balloon = balloonToSpawn[i].getObjectByName("Balloon_ballon_0");
     var animation1 = new TWEEN.Tween(balloon.scale).to({x:balloon.scale.x, y:0.5, z:balloon.scale.z}, 1000);
     animation1.repeat(Infinity);
@@ -981,7 +990,7 @@ function spawnBalloon(i, time) {
     animation2.repeat(Infinity);
     animation2.yoyo(true);
     animation2.start();
-    var animation3 = new TWEEN.Tween(balloonToSpawn[i].position).to({x:raccoons[0][0].position.x, y:50, z:balloonToSpawn[i].position.z}, 15000*(Math.random()+0.3));
+    var animation3 = new TWEEN.Tween(balloonToSpawn[i].position).to({x:raccoons[0][0].position.x, y:50, z:balloonToSpawn[i].position.z}, 17000);
     animation3.onUpdate(function() {
       if (balloonToSpawn[i].position.y > 45){
         animation3.stop();
@@ -1001,67 +1010,9 @@ function init(){
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   
-  // var css = "html, body {  margin: 0;  height: 100%;} #customControls { margin-left: 20px; z-index: 2;}" + 
-  //   ".loader {" +
-  //   "position: fixed;" +
-  //   "left: 0px;" +
-  //   "top: 0px;" + 
-  //   "width: 100%;" +
-  //   "height: 100%;" +
-  //   "background: url('./raccoonLoading.gif');" +
-  //   "background-color: rgb(254,68,0);" +
-  //   "background-position: center;" +
-  //   "background-repeat: no-repeat;" +
-  //   "background-size: 960px 720px;" +
-  //   "margin: auto;" +
-  //   "}" + 
-  //   "#progressBar-align" +
-  //   "{ position: relative; " +
-  //   "width: 854px; " +
-  //   "height: 200px;" +
-  //   "margin: auto;}" +
-  //   "#hud {" +
-  //   "position: absolute;" +
-  //   "top: 0;" +
-  //   "width: 100%;" +
-  //   "height: 100%;" +
-  //   "margin: auto;" +
-  //   "z-index: 3;" +
-  //   "display: none;} " +
-  //   "#hud.visible { " +
-  //   "display: block;}"  +
-  //   "#A, #S{ " +
-  //   "position: absolute; " + 
-  //   "border: 3px solid #FFF;" +
-  //   "border-radius: 5px;" +
-  //   "color: #FFF;" +
-  //   "font-family: arial;} " +
-  //   "#A { " +
-  //   "bottom: 10px;" +
-  //   "left: 10px;" +
-  //   "width: 80pt;"  +
-  //   "text-align: center; " +
-  //   "background: #AA3333; " +
-  //   "font-size: 50pt;"  +
-  //   "font-weight: bold;"  +
-  //   "padding: 5px;} " +
-  //   "#S { " +
-  //   "bottom: 10px; " +
-  //   "left: 120px;" +
-  //   "width: 80pt;"  +
-  //   "text-align: center;" +
-  //   "background: #3333AA;" +
-  //   "font-size: 50pt;" +
-  //   "font-weight: bold;" +
-  //   "padding: 5px;}" +
-  //   "#stats { float: right;};"
-  // var head = document.head || document.getElementsByTagName('head')[0];
-  // var style = document.createElement('style');
-  // createStyleCss(style, head, css);
-  
   renderer.shadowMap.enabled = true;
   camera.position.set(0, 10, 20);
-  controls.target.set(0, 0, 0);
+  // controls.target.set(0, 0, 0);
   // camera.position.set(0, 10, -50);
   // controls.target.set(0, 0, -50);
   // controls.update();
@@ -1071,28 +1022,33 @@ function init(){
   window.addEventListener( 'resize', onWindowResize, false );
 
   var onKeyDown = function(event) {
+    var base = (maxSpeed*20) /100;
+    var percentage = (100*barSpeed)/maxSpeed;
+    var decrease = (maxSpeed*15) /100;
     switch(event.keyCode){
       case 65:
         if (!a) {
           a = true;
-          s = false;
-          barSpeed += ((maxSpeed - barSpeed) * 25) / 100;
+          d = false;
+          barSpeed += base - ((decrease*percentage)/100);
+          if(barSpeed>maxSpeed) barSpeed = maxSpeed;
+        } else{
+          barSpeed -= base;
         }
         break;
-      case 83:
-        if (!s) {
-          s = true;
+      case 68:
+        if (!d) {
+          d = true;
           a = false;
-          barSpeed += ((maxSpeed - barSpeed) * 25) / 100;
+          barSpeed += base - ((decrease*percentage)/100);
+          if(barSpeed>maxSpeed) barSpeed = maxSpeed;
+        } else{
+          barSpeed -= base;
         }
         break;
     }
   }
   document.addEventListener('keydown', onKeyDown, false);
-
-  // aBoxHtml = document.getElementById("A");
-  // sBoxHtml = document.getElementById("S");
-  // barHtml = document.getElementById("speedBar");
   
   document.addEventListener("click", onclick, true);
 
@@ -1104,15 +1060,6 @@ function init(){
   trackField();
 
   myRacconCursor();
-  
-  // myBallon();
-  // myBallon();
-  // myBallon();
-  // myBallon();
-  // myBallon();
-  // myBallon();
-  // myBallon();
-  // myBallon();
 
   myRaccoon(4.5, false, true);
   requestAnimationFrame(render);
@@ -1143,19 +1090,15 @@ function onWindowResize() {
 
 }
 
-function resizeRendererToDisplaySize(renderer) {
-  // const canvas = renderer.domElement;
-  // const width = canvas.clientWidth;
-  // const height = canvas.clientHeight;
-  // const needResize = canvas.width !== width || canvas.height !== height;
-  // if (needResize) {
-  //   renderer.setSize(width, height, false);
-  // }
-  // return needResize;
-}
-
-// function switchColor(target, attribute, colorString){
-//   target.setAttribute(attribute, colorString);
+// function resizeRendererToDisplaySize(renderer) {
+//   // const canvas = renderer.domElement;
+//   // const width = canvas.clientWidth;
+//   // const height = canvas.clientHeight;
+//   // const needResize = canvas.width !== width || canvas.height !== height;
+//   // if (needResize) {
+//   //   renderer.setSize(width, height, false);
+//   // }
+//   // return needResize;
 // }
 
 // function updateBar(value){
@@ -1167,33 +1110,24 @@ function resizeRendererToDisplaySize(renderer) {
 function render(time) {
   time *= 0.001;  // convert to seconds
 
-  // if (!a) {
-  //   switchColor(aBoxHtml, "style", "background: rgba(120, 20, 20, 0.5)");
-  // } else{
-  //   switchColor(aBoxHtml, "style", "background: #AA3333");
-  // }
-  // if (!s) {
-  //   switchColor(sBoxHtml, "style", "background: rgba(20, 20, 120, 0.5)");
-  // } else{
-  //   switchColor(sBoxHtml, "style", "background: #3333AA")
-  // }
-
   // resizeRendererToDisplaySize(renderer);
   // {
   //   const canvas = renderer.domElement;
   //   camera.aspect = canvas.clientWidth / canvas.clientHeight;
   //   camera.updateProjectionMatrix();
   // }
+  if (allReady){
+    barSpeed -= 0.001;
+    boostBalloon -= 0.0003;
+    print(boostBalloon);
+    if(barSpeed < 0) barSpeed = 0;
+    if(boostBalloon < 0) boostBalloon = 0;
+    // console.log(time);
 
-  barSpeed -= 0.001;
-  if(barSpeed < 0) barSpeed = 0;
-  // console.log(time);
-  var percentageBarSpeed = String(Math.round((barSpeed/3)*100));
+    // updateBar(percentageBarSpeed);
 
-  // updateBar(percentageBarSpeed);
-
-  walkRaccoon(time);
-
+    walkRaccoon(time);  
+  }
   renderer.render(scene, camera);
   TWEEN.update();
   requestAnimationFrame(render);
@@ -1378,18 +1312,71 @@ var start2CameraX = -60;
 var one = true;
 var startingTime;
 
+function timeUpdate(time, startingTime){
+  var timeInSeconds = (time - startingTime - 3);
+  var seconds = timeInSeconds - (timeInSeconds % 1);
+  var hundredths = ((timeInSeconds - seconds) - ((timeInSeconds - seconds) % 0.01)) * 100;
+  hundredths -= hundredths % 1;
+  var secondString = seconds;
+  var hundredthsString = hundredths;
+  if (seconds < 10) secondString = "0" + secondString;
+  if (hundredths < 10) hundredthsString = "0" + hundredthsString;
+  
+  timePassed = "Time: " + secondString + ":" + hundredthsString;
+  document.getElementById("td3").innerHTML = timePassed;
+}
+
+function positionUpdate(){
+  var counter = 1;
+  for(var i = 1; i < raccoons.length; i++){
+    if(raccoons[0][0].position.x < raccoons[i][0].position.x) counter++;
+  }
+  document.getElementById("td2").innerHTML = "Position: " + counter + "°";
+}
+
+function AandDUpdate(){
+  var aBoxHtml = document.getElementById("A");
+  var dBoxHtml = document.getElementById("D");
+  if (!a) {
+    aBoxHtml.setAttribute("style", "background: rgba(120, 20, 20, 0.5)");
+  } else{
+    aBoxHtml.setAttribute("style", "background: #AA3333");
+  }
+  if (!d) {
+    dBoxHtml.setAttribute("style", "background: rgba(20, 20, 120, 0.5)");
+  } else{
+    dBoxHtml.setAttribute("style", "background: #3333AA");
+  }
+}
+
+function speedBarUpdate(){
+  var percentageBarSpeed = Math.round((barSpeed/maxSpeed)*100) + "%";
+
+  var speedBar = document.getElementById("speedBar");
+  var styleAttribute = "width: " + percentageBarSpeed + "; font-family: Copperplate, Papyrus, fantasy; font-size: 30px"
+  speedBar.setAttribute("style", styleAttribute);
+  speedBar.innerHTML = "<b>"+ percentageBarSpeed + "</b>";
+}
+
+function hudUpdate(time, startingTime) {
+  timeUpdate(time, startingTime)
+  positionUpdate();
+  AandDUpdate();
+  speedBarUpdate();
+}
+
 function walkRaccoon(time) {
-  // if (start1Camera < 4.5) {
-  //   start1Camera += step1Camera;
-  //   camera.position.set(-60, 3, start1Camera);
-  //   camera.lookAt(-69.3, 0.1, start1Camera);
-  // } else if (start2CameraZ < 25) {
-  //   // -70.7*1.2, 3, 25
-  //   start2CameraZ += step2CameraZ;
-  //   start2CameraX += step2CameraX;
-  //   camera.position.set(start2CameraX, 3, start2CameraZ);
-  //   camera.lookAt(-69.3, 0.1, 4.5);
-  // } else 
+  if (start1Camera < 4.5) {
+    start1Camera += step1Camera;
+    camera.position.set(-60, 3, start1Camera);
+    camera.lookAt(-69.3, 0.1, start1Camera);
+  } else if (start2CameraZ < 25) {
+    // -70.7*1.2, 3, 25
+    start2CameraZ += step2CameraZ;
+    start2CameraX += step2CameraX;
+    camera.position.set(start2CameraX, 3, start2CameraZ);
+    camera.lookAt(-69.3, 0.1, 4.5);
+  } else 
   if (one) {
     startingTime = time;
     one = false;
@@ -1408,13 +1395,20 @@ function walkRaccoon(time) {
       }
     }
     if (finish){
-      // camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
-      // camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
+      camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
+      camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
 
       // controls.target.set(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
       // controls.update();
-      var timeInSecond = Math.round(time - startingTime - 3)
-      print(timeInSecond)
+      if(barSpeedReset){
+        barSpeedReset = false;
+        barSpeed = 0;
+      }
+      hudUpdate(time, startingTime);
+
+      var timeInSecond = Math.round(time - startingTime - 3);
+
+      //print(timeInSecond)
       for (var i = 0; i < spawnBalloonBoolean.length; i ++) spawnBalloon(i, timeInSecond); 
       myRacconCursorMesh.position.x = raccoons[0][0].position.x;
       for (var i = 0; i < raccoons.length; i++) {
@@ -1739,7 +1733,7 @@ function print(elem) {
 }
 
 function barSpeedF(i) {
-  if (i == 0) return  barSpeed + 0.25; 
+  if (i == 0) return  barSpeed + 0.25 + boostBalloon; 
   else return 1
 }
 
