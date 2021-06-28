@@ -33,7 +33,6 @@ var timePassed = "00:00";
 const balloons = new THREE.Group();
 
 loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-	
 };
 
 loadingManager.onLoad = function ( ) {
@@ -86,15 +85,6 @@ loadingManager.onLoad = function ( ) {
 };
 
 loadingManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
-  // var orbitDiv = document.getElementById("orbitDiv");
-  // var loading = document.createElement('div');
-  // var divText = document.createElement('div');
-  // loading.setAttribute("class", "loader");
-  // divText.setAttribute("align", "center");
-  // divText.setAttribute("style", "padding: 10px; font-size: 30px");
-  // divText.innerHTML = "Loading...";
-  // loading.appendChild(divText);
-  // orbitDiv.appendChild(loading);
 };
 
 loadingManager.onError = function ( url ) {
@@ -103,36 +93,14 @@ loadingManager.onError = function ( url ) {
 
 var loader = new THREE.TextureLoader(loadingManager);
 
-// var cursorAnimation1;
-// var cursorAnimation2;
-// var elephantAnimation1 = [];
-// var elephantAnimation2 = [];
-// var giraffeAnimation1;
-// var giraffeAnimation2;
-// var giraffeAnimation3;
-// var giraffeAnimation4;
-// var sealAnimation1;
-// var pigeonAnimation1;
-// var chicken5Animation1;
-// var chicken5Animation2;
-// var chicken4Animation1;
-// var chicken4Animation2;
-// var chicken4Animation3;
-// var chicken3Animation1;
-// var chicken2Animation1;
-// var chicken1Animation1;
-// var chicken1Animation2;
-// var headDinoAnimation;
-// var tailAnimations = [];
-
 function trackField(){
   var width = 140;
   var height = 2;
   var lineHeigth = height/8;
   var repeat = width/height;
   var repeatEndLines = (5*height + 6*lineHeigth)/height;
-  var trackTexture = './textures/runningTrackField.png';
-  var grassTexture = './textures/grass.png';
+  var trackTexture = './../resources/textures/runningTrackField.png';
+  var grassTexture = './../resources/textures/grass.png';
 
   myPlane(600, 600, grassTexture, 0, -0.1, 0, 1, 120, false, true);
 
@@ -279,7 +247,7 @@ function dinoTailAnimation(tail, tailrot, t) {
 }
 
 function trex1(x, y, z , t){
-  gltfLoader.load('./trex1/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/trex/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 3;
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -363,7 +331,7 @@ function trex1(x, y, z , t){
 }
 
 function chicken1(x, y, z, t){
-  gltfLoader.load('./chicken1/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/chickens/chicken1/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(2); // adjust scalar factor to match your scene scale
     root.position.x = 0 + x; // once rescaled, position the model where needed
@@ -401,7 +369,7 @@ function chicken1(x, y, z, t){
 }
 
 function chicken2(x, y, z, t){
-  gltfLoader.load('./chicken2/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/chickens/chicken2/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(2); // adjust scalar factor to match your scene scale
     root.position.x = 0 + x; // once rescaled, position the model where needed
@@ -432,7 +400,7 @@ function chicken2(x, y, z, t){
 }
 
 function chicken3(x, y, z, t){
-  gltfLoader.load('./chicken3/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/chickens/chicken3/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 5;
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -467,7 +435,7 @@ function chicken3(x, y, z, t){
 }
 
 function chicken4(x, y, z, t){
-  gltfLoader.load('./chicken4/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/chickens/chicken4/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 7;
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -524,7 +492,7 @@ function chicken4(x, y, z, t){
 }
 
 function chicken5(x, y, z, t){
-  gltfLoader.load('./chicken5/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/chickens/chicken5/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 0.5
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -560,7 +528,7 @@ function chicken5(x, y, z, t){
 }
 
 function pigeon1(x, y, z, t){
-  gltfLoader.load('./pigeon1/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/pigeon/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 0.1;
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -604,7 +572,7 @@ function pigeon1(x, y, z, t){
 }
 
 function seal1(x, y, z, t){
-  gltfLoader.load('./seal1/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/seal/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 0.015;
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -639,7 +607,7 @@ function seal1(x, y, z, t){
 }
 
 function giraffe1(x, y, z, t){
-  gltfLoader.load('./giraffe1/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/giraffe/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 1.8;
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -696,7 +664,7 @@ function giraffe1(x, y, z, t){
 }
 
 function elephant1(x, y, z, t){
-  gltfLoader.load('./elephant1/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/elephant/scene.gltf', function (gltf){
     const root = gltf.scene;
     var scaling = 4;
     root.scale.multiplyScalar(scaling); // adjust scalar factor to match your scene scale
@@ -779,7 +747,7 @@ function tribunePopulation(){
 
 function myTribune(){
   tribunePopulation();
-  gltfLoader.load('./tribune/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/tribune/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(0.01);
     root.scale.x *= 2;
@@ -806,7 +774,7 @@ function stopAnimations(){
 }
 
 function myRaccoon(z, load = false, me = false){
-  gltfLoader.load('./racoon2/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/animals/raccoon/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(2); // adjust scalar factor to match your scene scale
     root.position.x = -140/2 + 0.7; // once rescaled, position the model where needed
@@ -875,16 +843,17 @@ function myDirectionalLight(){
   const color = 0xFFFFFF;
   const intensity = 5;
   const light = new THREE.DirectionalLight(color, intensity);
-  light.position.set(100, 50, 0);
+  light.position.set(300, 300, 0);
   light.target.position.set(0, 0, 0);
   light.castShadow = true;
-  light.shadow.camera.top = 100;
-  light.shadow.camera.bottom = -100;
-  light.shadow.camera.right = 100;
-  light.shadow.camera.left = -100;
-  light.shadow.mapSize.width = 20000;
-  light.shadow.mapSize.height = 20000;
+  light.shadow.camera.top = 300;
+  light.shadow.camera.bottom = -300;
+  light.shadow.camera.right = 300;
+  light.shadow.camera.left = -300;
+  light.shadow.mapSize.width = 60000;
+  light.shadow.mapSize.height = 60000;
   light.shadow.bias = -0.0005;
+  light.shadow.camera.far = 1000;
 
   const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
   scene.add(cameraHelper);
@@ -908,10 +877,10 @@ function createCanvas(orbitDiv, div, div2, html){
 
 
 function myBallon() {
-  gltfLoader.load('./balloon/scene.gltf', function (gltf){
+  gltfLoader.load('./../resources/models/balloon/scene.gltf', function (gltf){
     const root = gltf.scene;
     root.scale.multiplyScalar(0.02); 
-    root.position.x = -500;
+    root.position.x = 500;
     // root.position.x = raccoons[0][0].position.x + (Math.random() - 0.5)*4; 
     // root.position.y = 2 + Math.random()*4;
     // root.position.z = 4 + (Math.random() - 0.5)*4;
@@ -963,7 +932,7 @@ function onclick(event) {
     selectedObject = intersects[0].object;
     while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
-    play("./balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
+    play("./../resources/audios/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
     boostBalloon += 0.2;
     balloons.remove(selectedObject);
   }
@@ -977,9 +946,6 @@ function spawnBalloon(i, time) {
     spawnBalloonBoolean[i] = false
     balloonToSpawn[i].position.x = raccoons[0][0].position.x + 3 +(Math.random() - 0.5)*5;
     balloonToSpawn[i].position.y = 0;
-    // var random = Math.random()-0.5;
-    // var front = 1;
-    // if (random < 0) front = -1;
     balloonToSpawn[i].position.z = -10 - (Math.random() - 0.5)*8;
     var balloon = balloonToSpawn[i].getObjectByName("Balloon_ballon_0");
     var animation1 = new TWEEN.Tween(balloon.scale).to({x:balloon.scale.x, y:0.5, z:balloon.scale.z}, 1000);
@@ -1005,13 +971,77 @@ function spawnBalloon(i, time) {
   } 
 }
 
+function tree(i, x, y, z, scale) {
+  gltfLoader.load('./../resources/models/trees/tree' + i + '/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    root.scale.multiplyScalar(scale); 
+    root.position.x = x;
+    root.position.y = y;
+    root.position.z = z;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = true;        
+        object.castShadow = true;
+        object.receiveShadow = true;
+      } 
+    });
+
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+function trees(){
+  //tree1
+  tree(1, -90, 0, -70, 0.01);
+  tree(1, -140, 0, -50, 0.007);
+  tree(1, -120, 0, -30, 0.012);
+  tree(1, 90, 0, -70, 0.01);
+  tree(1, 140, 0, -90, 0.02);
+  tree(1, 120, 0, -140, 0.03);
+
+  //tree2
+  tree(2, -80, 0, -40, 1);
+  tree(2, -20, 0, -150, 3);
+  tree(2, -130, 0, 20, 1);
+  tree(2, 80, 0, -40, 1.4);
+  tree(2, 20, 0, -150, 3);
+  tree(2, -150, 0, -20, 1.3);
+  
+  //tree3
+  tree(3, -90, -1, -170, 0.05);
+  tree(3, -90, -1, 20, 0.02);
+  tree(3, -300, -1, 20, 0.06);
+  tree(3, 90, -1, -190, 0.07);
+  tree(3, -120, -1, 40, 0.03);
+  tree(3, -270, -1, -30, 0.05);
+  
+  //tree4
+  tree(4, -50, -1, -170, 0.1);
+  tree(4, -150, -1, -150, 0.05);
+  tree(4, -120, -1, -5, 0.02);
+  tree(4, 50, -1, -170, 0.15);
+  tree(4, -180, -1, 50, 0.04);
+  tree(4, -90, -1, 10, 0.01);
+  
+  //tree5
+  tree(5, 150, 0, -200, 0.2);
+  tree(5, 300, 0, -140, 0.2);
+  tree(5, -280, 0, -190, 0.18);
+  tree(5, 250, 0, -180, 0.25);
+  tree(5, -300, 0, -140, 0.2);
+  tree(5, 30, 0, -230, 0.2);
+}
+
 function init(){
   renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   
   renderer.shadowMap.enabled = true;
-  camera.position.set(0, 10, 20);
+  // camera.position.set(0, 10, 20);
   // controls.target.set(0, 0, 0);
   // camera.position.set(0, 10, -50);
   // controls.target.set(0, 0, -50);
@@ -1058,6 +1088,7 @@ function init(){
   myEmisphereLight();
   myDirectionalLight();
   trackField();
+  trees();
 
   myRacconCursor();
 
@@ -1090,44 +1121,17 @@ function onWindowResize() {
 
 }
 
-// function resizeRendererToDisplaySize(renderer) {
-//   // const canvas = renderer.domElement;
-//   // const width = canvas.clientWidth;
-//   // const height = canvas.clientHeight;
-//   // const needResize = canvas.width !== width || canvas.height !== height;
-//   // if (needResize) {
-//   //   renderer.setSize(width, height, false);
-//   // }
-//   // return needResize;
-// }
-
-// function updateBar(value){
-//   barHtml.setAttribute("aria-valuenow", value);
-//   barHtml.setAttribute("style", "width:" + value + "%");
-//   barHtml.innerHTML = value;
-// }
-
 function render(time) {
-  time *= 0.001;  // convert to seconds
+  time *= 0.001; 
 
-  // resizeRendererToDisplaySize(renderer);
-  // {
-  //   const canvas = renderer.domElement;
-  //   camera.aspect = canvas.clientWidth / canvas.clientHeight;
-  //   camera.updateProjectionMatrix();
-  // }
   if (allReady){
     barSpeed -= 0.001;
     boostBalloon -= 0.0003;
-    print(boostBalloon);
     if(barSpeed < 0) barSpeed = 0;
     if(boostBalloon < 0) boostBalloon = 0;
-    // console.log(time);
-
-    // updateBar(percentageBarSpeed);
-
     walkRaccoon(time);  
   }
+
   renderer.render(scene, camera);
   TWEEN.update();
   requestAnimationFrame(render);
@@ -1338,14 +1342,14 @@ function AandDUpdate(){
   var aBoxHtml = document.getElementById("A");
   var dBoxHtml = document.getElementById("D");
   if (!a) {
-    aBoxHtml.setAttribute("style", "background: rgba(120, 20, 20, 0.5)");
-  } else{
     aBoxHtml.setAttribute("style", "background: #AA3333");
+  } else{
+    aBoxHtml.setAttribute("style", "background: rgba(120, 20, 20, 0.5)");
   }
   if (!d) {
-    dBoxHtml.setAttribute("style", "background: rgba(20, 20, 120, 0.5)");
-  } else{
     dBoxHtml.setAttribute("style", "background: #3333AA");
+  } else{
+    dBoxHtml.setAttribute("style", "background: rgba(20, 20, 120, 0.5)");
   }
 }
 
