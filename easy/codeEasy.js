@@ -159,7 +159,7 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
     side: THREE.DoubleSide,
   });
 
-  planeMat.color.setRGB(0.4, 0.4, 0.4);
+  planeMat.color.setRGB(0.25, 0.25, 0.25);
   if(line != 1) planeMat.color.setRGB(2.5, 2.5, 2.5);
 
   const mesh = new THREE.Mesh(planeGeo,planeMat);
@@ -1316,6 +1316,12 @@ var start2CameraX = -60;
 var one = true;
 var startingTime;
 
+var cameraFinishMovement;
+var cameraLookAtFinishMovement;
+var startCameraFinishPosition;
+var startCameraLookAtFinishPosition;
+var cameraFinishStepsAnimation = 400;
+
 function timeUpdate(time, startingTime){
   var timeInSeconds = (time - startingTime - 3);
   var seconds = timeInSeconds - (timeInSeconds % 1);
@@ -1402,6 +1408,11 @@ function walkRaccoon(time) {
       camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
       camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
 
+      startCameraFinishPosition = {x: raccoons[0][0].position.x*1.2, y: 3, z: 25};
+      startCameraLookAtFinishPosition = {x: raccoons[0][0].position.x, y: raccoons[0][0].position.y, z: raccoons[0][0].position.z};
+      cameraFinishMovement = startCameraFinishPosition;
+      cameraLookAtFinishMovement = startCameraLookAtFinishPosition;
+
       // controls.target.set(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
       // controls.update();
       if(barSpeedReset){
@@ -1447,7 +1458,32 @@ function walkRaccoon(time) {
       }
     } else{
       stopAnimations();
-      myRacconCursorMesh.position.x = raccoons[0][0].position.x;
+      print(cameraFinishMovement)
+      if (cameraFinishMovement.y >= 1) {
+        myRacconCursorMesh.position.x = raccoons[0][0].position.x;
+        var cameraFinishDistance = {x:Math.abs(startCameraFinishPosition.x - 80),
+                                    y:Math.abs(startCameraFinishPosition.y - 1),  
+                                    z:Math.abs(startCameraFinishPosition.z - 8)}
+        var cameraFinishLookAtDistance = {x:Math.abs(startCameraLookAtFinishPosition.x - 70),
+                                          y:Math.abs(startCameraLookAtFinishPosition.y - 3),  
+                                          z:Math.abs(startCameraLookAtFinishPosition.z - 0)}
+  
+        var stepsCameraFinish = {x:cameraFinishDistance.x/cameraFinishStepsAnimation,
+                                 y:cameraFinishDistance.y/cameraFinishStepsAnimation,  
+                                 z:cameraFinishDistance.z/cameraFinishStepsAnimation};
+        var stepsCameraLookAtFinish = {x:cameraFinishLookAtDistance.x/cameraFinishStepsAnimation,
+                                       y:cameraFinishLookAtDistance.y/cameraFinishStepsAnimation,  
+                                       z:cameraFinishLookAtDistance.z/cameraFinishStepsAnimation};
+  
+        cameraFinishMovement = {x:cameraFinishMovement.x - stepsCameraFinish.x,
+                                y:cameraFinishMovement.y - stepsCameraFinish.y,  
+                                z:cameraFinishMovement.z - stepsCameraFinish.z};
+        cameraLookAtFinishMovement = {x:cameraLookAtFinishMovement.x + stepsCameraLookAtFinish.x,
+                                      y:cameraLookAtFinishMovement.y + stepsCameraLookAtFinish.y,  
+                                      z:cameraLookAtFinishMovement.z - stepsCameraLookAtFinish.z};
+        camera.position.set(cameraFinishMovement.x, cameraFinishMovement.y, cameraFinishMovement.z);
+        camera.lookAt(cameraLookAtFinishMovement.x, cameraLookAtFinishMovement.y, cameraLookAtFinishMovement.z);
+      }
       // if (finishAudio) {
       //   finishAudio = false;
       //   play("./balloonExplosion1.wav", 0.05, true);
@@ -1455,6 +1491,7 @@ function walkRaccoon(time) {
     }
   }
 }
+
 // var finishAudio = true;
 
 function walkFrontShoulderLeft(i) {
