@@ -1498,7 +1498,7 @@ function walkRaccoon(time) {
                                                       '<div>'+ timePassed + '</div>' +
                                                       '<div>'+ "Balloons Popped: " + balloonPopped + "/5<br>" + '</div>' +
                                                       '<div style="padding: 50px;">' +
-                                                        '<button id = "button2" onclick="location.href=\'./../startMenu.html\'">Main Menu</button>' +
+                                                        '<button id = "button2" onclick="location.href=\'./../index.html\'">Main Menu</button>' +
                                                       '</div>' +
                                                     '</div>';
 
