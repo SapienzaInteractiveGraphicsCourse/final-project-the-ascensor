@@ -30,6 +30,8 @@ var barSpeedReset = true;
 var boostBalloon = 0;
 var position = 1;
 var timePassed = "00:00";
+var endRace = true;
+var balloonPopped = 0;
 const balloons = new THREE.Group();
 
 loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -46,8 +48,10 @@ loadingManager.onLoad = function ( ) {
     button.addEventListener("click", function() {
       var orbitDiv = document.getElementById("orbitDiv");
       var div = document.createElement('div');
+      div.setAttribute("style", "position: relative;");
+      div.setAttribute("id", "divCanvas");
       var div2 = document.createElement('div');
-      var html =  '<table width= 100%>' +
+      var html =  '<table class = "unselectable" width= 100%>' +
                     '<colgroup>' +
                       '<col span="1" style="width: 25%;">' +
                       '<col span="1" style="width: 50%;">' +
@@ -71,10 +75,10 @@ loadingManager.onLoad = function ( ) {
                       '</tr>' +
                     '</tbody>' +
                   '</table>' +
-                  '<div id = "A" class="ng-binding">' +
+                  '<div class= "unselectable" id = "A" class="ng-binding">' +
                     '<b>A</b>' +
                   '</div>' +
-                  '<div id = "D" class="ng-binding">' +
+                  '<div class= "unselectable" id = "D" class="ng-binding">' +
                     '<b>D</b>' +
                   '</div>';
         createCanvas(orbitDiv, div, div2, html);
@@ -870,6 +874,7 @@ function createCanvas(orbitDiv, div, div2, html){
   div2.setAttribute("ng-class","{visible: style.visible");
   div2.setAttribute("class","visible");
   div2.innerHTML= html;
+  renderer.domElement.setAttribute("class","canvasColor")
   div.appendChild(renderer.domElement);
   div.appendChild(div2);
   orbitDiv.appendChild(div);
@@ -934,6 +939,7 @@ function onclick(event) {
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
     play("./../resources/audios/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
     boostBalloon += 0.2;
+    balloonPopped += 1;
     balloons.remove(selectedObject);
   }
 }
@@ -1082,7 +1088,8 @@ function init(){
   
   document.addEventListener("click", onclick, true);
 
-
+  
+        
 
 
   myEmisphereLight();
@@ -1337,11 +1344,11 @@ function timeUpdate(time, startingTime){
 }
 
 function positionUpdate(){
-  var counter = 1;
+  position = 1;
   for(var i = 1; i < raccoons.length; i++){
-    if(raccoons[0][0].position.x < raccoons[i][0].position.x) counter++;
+    if(raccoons[0][0].position.x < raccoons[i][0].position.x) position++;
   }
-  document.getElementById("td2").innerHTML = "Position: " + counter + "°";
+  document.getElementById("td2").innerHTML = "Position: " + position + "°";
 }
 
 function AandDUpdate(){
@@ -1458,7 +1465,6 @@ function walkRaccoon(time) {
       }
     } else{
       stopAnimations();
-      print(cameraFinishMovement)
       if (cameraFinishMovement.y >= 1) {
         myRacconCursorMesh.position.x = raccoons[0][0].position.x;
         var cameraFinishDistance = {x:Math.abs(startCameraFinishPosition.x - 80),
@@ -1475,15 +1481,31 @@ function walkRaccoon(time) {
                                        y:cameraFinishLookAtDistance.y/cameraFinishStepsAnimation,  
                                        z:cameraFinishLookAtDistance.z/cameraFinishStepsAnimation};
   
-        cameraFinishMovement = {x:cameraFinishMovement.x - stepsCameraFinish.x,
-                                y:cameraFinishMovement.y - stepsCameraFinish.y,  
+        cameraFinishMovement = {x:cameraFinishMovement.x - ((startCameraFinishPosition.x-80)/Math.abs(startCameraFinishPosition.x-80))* stepsCameraFinish.x,
+                                y:cameraFinishMovement.y - stepsCameraFinish.y,
                                 z:cameraFinishMovement.z - stepsCameraFinish.z};
         cameraLookAtFinishMovement = {x:cameraLookAtFinishMovement.x + stepsCameraLookAtFinish.x,
                                       y:cameraLookAtFinishMovement.y + stepsCameraLookAtFinish.y,  
                                       z:cameraLookAtFinishMovement.z - stepsCameraLookAtFinish.z};
         camera.position.set(cameraFinishMovement.x, cameraFinishMovement.y, cameraFinishMovement.z);
         camera.lookAt(cameraLookAtFinishMovement.x, cameraLookAtFinishMovement.y, cameraLookAtFinishMovement.z);
+      } else if(endRace){
+        endRace = false;
+        if(position != 1) timePassed = "Time: N / D";
+        document.getElementById("hud").innerHTML =  '<div align="center" class="overlay endScoreFont">' +
+                                                      '<div style="font-size: 80px">'+ "Your Score<br>" + '</div>' +
+                                                      '<div>'+ "Position: " + position + "°<br>" + '</div>' +
+                                                      '<div>'+ timePassed + '</div>' +
+                                                      '<div>'+ "Balloons Popped: " + balloonPopped + "/5<br>" + '</div>' +
+                                                      '<div style="padding: 30px;">' +
+                                                        '<button id = "button2" onclick="location.href=\'./../startMenu.html\'">Main Menu</button>' +
+                                                      '</div>' +
+                                                    '</div>';
+
+        // document.body.setAttribute("style", "background-color: rgba(0, 0, 0, 0.185);");
+
       }
+
       // if (finishAudio) {
       //   finishAudio = false;
       //   play("./balloonExplosion1.wav", 0.05, true);
@@ -1492,6 +1514,10 @@ function walkRaccoon(time) {
   }
 }
 
+// var divOverlay = document.createElement("div");
+// divOverlay.setAttribute("class", "overlay");
+// divOverlay.setAttribute("align","center");
+// divOverlay.innerHTML = "Your Score <br><br> " + timePassed + "<br><br>" + "Ballons popped: " + "/5<br><br>" + "Position: " + position + "°<br><br>" + "<button id = 'button2'> Main Menu</button>"
 // var finishAudio = true;
 
 function walkFrontShoulderLeft(i) {
