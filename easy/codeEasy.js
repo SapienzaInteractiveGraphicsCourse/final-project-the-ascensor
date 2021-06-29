@@ -937,7 +937,7 @@ function onclick(event) {
     selectedObject = intersects[0].object;
     while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
-    play("./../resources/audios/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
+    play("./../resources/audios/BalloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
     boostBalloon += 0.2;
     balloonPopped += 1;
     balloons.remove(selectedObject);
