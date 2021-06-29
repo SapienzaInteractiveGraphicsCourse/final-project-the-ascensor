@@ -1493,11 +1493,11 @@ function walkRaccoon(time) {
         endRace = false;
         if(position != 1) timePassed = "Time: N / D";
         document.getElementById("hud").innerHTML =  '<div align="center" class="overlay endScoreFont">' +
-                                                      '<div style="font-size: 80px">'+ "Your Score<br>" + '</div>' +
+                                                      '<div style="font-size: 130px">'+ "Your Score<br>" + '</div>' +
                                                       '<div>'+ "Position: " + position + "°<br>" + '</div>' +
                                                       '<div>'+ timePassed + '</div>' +
                                                       '<div>'+ "Balloons Popped: " + balloonPopped + "/5<br>" + '</div>' +
-                                                      '<div style="padding: 30px;">' +
+                                                      '<div style="padding: 50px;">' +
                                                         '<button id = "button2" onclick="location.href=\'./../startMenu.html\'">Main Menu</button>' +
                                                       '</div>' +
                                                     '</div>';
