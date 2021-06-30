@@ -57,7 +57,7 @@
 				background-color: rgb(254,68,0);
 				background-position: center;
 				background-repeat: no-repeat; 
-				background-size: 960px 720px; 
+				background-size: 960px 720px;
 				margin: auto;
 			}
 
@@ -90,6 +90,19 @@
 				font-family: Copperplate, Papyrus, fantasy;
 			}
 			
+			#countdown{
+
+				font-family: Copperplate, Papyrus, fantasy;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+				font-weight: bold;
+				text-shadow: 2px 2px #000000;
+				color: rgb(238, 231, 231);
+			}
+
 			#A {  
 				bottom: 10px;
 				left: 10px;
@@ -312,7 +325,12 @@
         <div id = "container">
             <div id = "orbitDiv" class="parent" style="position:relative">
 				<div class = "loader">
-					<div id = "clickText" align = "center" style = "padding: 20px; font-size: 50px; font-family: Copperplate, Papyrus, fantasy;"><b>Loading...</b></div>
+					<div id = "clickText" align = "center" style = "padding: 20px; font-size: 50px; font-family: Copperplate, Papyrus, fantasy;">
+						<b>Loading...</b>
+						<p align = "center" style = "padding: 20px; font-size: 30px; font-family: Copperplate, Papyrus, fantasy;">
+							*It may take a while depending on your connection and computer specifications, don't worry!
+						</p>
+					</div>
 				</div>
             </div>
         </div>

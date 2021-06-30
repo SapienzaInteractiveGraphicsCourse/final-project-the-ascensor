@@ -32,6 +32,10 @@ var position = 1;
 var timePassed = "00:00";
 var endRace = true;
 var balloonPopped = 0;
+var inGame = true;
+var endGame = true;
+var sounds = [];
+var countdownSound = true;
 const balloons = new THREE.Group();
 
 loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -75,6 +79,7 @@ loadingManager.onLoad = function ( ) {
                       '</tr>' +
                     '</tbody>' +
                   '</table>' +
+                  '<div id = "countdown" class= "unselectable" style ="font-size: 140px;"></div>' + 
                   '<div class= "unselectable" id = "A" class="ng-binding">' +
                     '<b>A</b>' +
                   '</div>' +
@@ -82,7 +87,42 @@ loadingManager.onLoad = function ( ) {
                     '<b>D</b>' +
                   '</div>';
         createCanvas(orbitDiv, div, div2, html);
-        //play("./balloonExplosion1.wav", 0.05, true); // secondo me va messo qui con tutti gli audio dopo che si clicca play
+        play("./../resources/audios/soundtracks/inGame.mp3", 0.05, true, false, "inGame", 0);
+        play("./../resources/audios/soundtracks/endGame.mp3", 0.05, true, false, "endGame", 0);
+        play("./../resources/audios/soundtracks/countdown.mp3", 0.05, false, false, "countdown", 0);
+        play("./../resources/audios/chicken/chicken1.mp3", 0.004, true, true, "", 200);
+        play("./../resources/audios/chicken/chicken2.mp3", 0.004, true, true, "", 400);
+        play("./../resources/audios/chicken/chicken3.mp3", 0.004, true, true, "", 600);
+        play("./../resources/audios/chicken/chicken2.mp3", 0.004, true, true, "", 800);
+        play("./../resources/audios/chicken/chicken1.mp3", 0.004, true, true, "", 1000);
+        play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 450);
+        play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 550);
+        play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 750);
+        play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 550);
+        play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 750);
+        play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 950);
+        play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 710);
+        play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 910);
+        play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 1110);
+        play("./../resources/audios/seal/seal.mp3", 0.01, true, true, "", 375);
+        play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 225);
+        play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 525);
+        play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 725);
+
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps0", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps0", 230);
+        
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps1", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps1", 230);
+        
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps2", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps2", 230);
+        
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps3", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps3", 230);
+        
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps4", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps4", 230);
         allReady = true;
     }, false); 
   }
@@ -240,6 +280,15 @@ function raccoonBones(root) {
   r_middle_01_R_060 : root.getObjectByName("r_middle_01_R_060"),
   r_index_00_R_061 : root.getObjectByName("r_index_00_R_061"),
   r_index_01_R_00 : root.getObjectByName("r_index_01_R_00")};
+}
+
+function stopSoundAnimals(){
+  for(var i = 0; i < sounds.length; i++){
+    if(sounds[i][1] == ""){
+      sounds[i][0].stop();
+    }
+    
+  }
 }
 
 function dinoTailAnimation(tail, tailrot, t) {
@@ -771,6 +820,28 @@ function myTribune(){
   });
 }
 
+function finishLine(){
+  gltfLoader.load('./../resources/models/finishLine/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    root.scale.multiplyScalar(220);
+    root.scale.y -= 40;
+    root.position.y -= 0.55;
+    root.position.x += 70;
+    root.rotation.y = Math.PI * 0.5;
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = true;
+        object.castShadow = true;
+        object.receiveShadow = true;
+        object.material.depthWrite = true;
+      } 
+    });
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
 function stopAnimations(){
   for(var i = 0; i < animations.length ; i++){
     animations[i].stop();
@@ -795,8 +866,8 @@ function myRaccoon(z, i){
     });
 
 
-    var otherSpeed = 110 - Math.random()*15;
-    if (i == 0) otherSpeed = 180;
+    var otherSpeed = 80 //-Math.random()*15;
+    if (i == 0) otherSpeed = 140;//MEDIUM 160
     raccoonStartPosition(root, otherSpeed, i)
 
     scene.add(root);
@@ -913,17 +984,20 @@ function myBallon() {
   });
 }
 
-function play(audio, volume, loop = false) { 
+function play(audio, volume, loop, preload, idValue, delay) { 
   const listener = new THREE.AudioListener();
   camera.add( listener );
-  const sound = new THREE.Audio( listener );
+  var sound = new THREE.Audio( listener );
+  sounds.push([sound, idValue]);
   const audioLoader = new THREE.AudioLoader();
-  audioLoader.load(audio, function( buffer ) {
-    sound.setBuffer( buffer );
-    sound.setLoop(loop);
-    sound.setVolume(volume);
-    sound.play();
-  });
+  setTimeout(() => {
+    audioLoader.load(audio, function( buffer ) {
+      sound.setBuffer( buffer );
+      sound.setLoop(loop);
+      sound.setVolume(volume);
+      if(preload) sound.play();
+    });
+  }, delay);
 }
 
 function onclick(event) {
@@ -938,7 +1012,7 @@ function onclick(event) {
     selectedObject = intersects[0].object;
     while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
-    play("./../resources/audios/BalloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05);
+    play("./../resources/audios/balloon/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05, false, true, "", 0);
     boostBalloon += 0.2;
     balloonPopped += 1;
     balloons.remove(selectedObject);
@@ -1049,6 +1123,7 @@ function init(){
   
   renderer.shadowMap.enabled = true;
   // camera.position.set(0, 10, 20);
+  // camera.lookAt(0, 0, 0);
   // controls.target.set(0, 0, 0);
   // camera.position.set(0, 10, -50);
   // controls.target.set(0, 0, -50);
@@ -1056,6 +1131,7 @@ function init(){
   scene.background = new THREE.Color("lightblue");
   scene.add(balloons)
   fog();
+  
   window.addEventListener( 'resize', onWindowResize, false );
 
   var onKeyDown = function(event) {
@@ -1097,6 +1173,7 @@ function init(){
   myDirectionalLight();
   trackField();
   trees();
+  finishLine();
 
   myRacconCursor();
   for (var i = 0; i < spawnBalloonBoolean.length; i++) myBallon();
@@ -1324,11 +1401,13 @@ var tailValues = [];
 var tail1 = [];
 var tail2 = [];
 
-var step1Camera = 9/600; 
+var footStep = [false, false, false, false, false];
+
+var step1Camera = 9/400; 
 var start1Camera = -4.5;
-var step2CameraZ = 20.5/600;
+var step2CameraZ = 20.5/400;
 var start2CameraZ = 4.5;
-var step2CameraX = -23.16/600;
+var step2CameraX = -23.16/400;
 var start2CameraX = -60;
 var one = true;
 var startingTime;
@@ -1337,7 +1416,7 @@ var cameraFinishMovement;
 var cameraLookAtFinishMovement;
 var startCameraFinishPosition;
 var startCameraLookAtFinishPosition;
-var cameraFinishStepsAnimation = 400;
+var cameraFinishStepsAnimation = 200;
 
 function timeUpdate(time, startingTime){
   var timeInSeconds = (time - startingTime - 3);
@@ -1392,6 +1471,14 @@ function hudUpdate(time, startingTime) {
   speedBarUpdate();
 }
 
+function findSound(idValue){
+  for(var i = 0; i < sounds.length; i++){
+    if(sounds[i][1] == idValue){
+      return sounds[i][0];
+    }
+  }
+}
+
 function walkRaccoon(time) {
   if (start1Camera < 4.5) {
     start1Camera += step1Camera;
@@ -1408,10 +1495,43 @@ function walkRaccoon(time) {
     startingTime = time;
     one = false;
   }
-  // if ((time - startingTime) >= 0 && (time - startingTime) <= 1) print(3);
-  // if ((time - startingTime) >= 1 && (time - startingTime) <= 2) print(2);
-  // if ((time - startingTime) >= 2 && (time - startingTime) <= 3) print(1);
-  // if ((time - startingTime) >= 3) print("VIA!");
+  if ((time - startingTime) >= 0 && (time - startingTime) <= 1){
+    if(countdownSound){
+      countdownSound = false;
+      findSound("countdown").play();
+    }
+    var countdown = document.getElementById("countdown")
+    countdown.innerHTML = 3;
+    var size = 140 + 220*(time-startingTime);
+    countdown.setAttribute("style","font-size: " + size + "px;");
+  }
+  if ((time - startingTime) >= 1 && (time - startingTime) <= 2){
+    var countdown = document.getElementById("countdown")
+    countdown.innerHTML = 2;
+    var size = 140 + 220*(time-startingTime - 1);
+    countdown.setAttribute("style","font-size: " + size + "px;");
+  }
+  if ((time - startingTime) >= 2 && (time - startingTime) <= 3){
+    var countdown = document.getElementById("countdown")
+    countdown.innerHTML = 1;
+    var size = 140 + 220*(time-startingTime - 2);
+    countdown.setAttribute("style","font-size: " + size + "px;");
+  }
+  if ((time - startingTime) >= 3 && (time - startingTime) <= 4){
+    var countdown = document.getElementById("countdown")
+    countdown.innerHTML = "GO!";
+    var opacity = 1 - (time - startingTime - 3);
+    if(inGame){
+      inGame = false;
+      findSound("inGame").play();
+      // play("./../resources/audios/soundtracks/inGame.mp3", 0.05, "inGame", 0,true);
+    }
+    countdown.setAttribute("style","font-size: 220px; opacity: " + opacity + ";");
+  } 
+  if ((time - startingTime) >= 4 && !endRace){
+    var countdown = document.getElementById("countdown");
+    countdown.innerHTML = "";
+  }
 
   // var container = document.getElementById("container");
   if(raccoonLoaded == 5 && (time - startingTime) >= 3){
@@ -1475,6 +1595,13 @@ function walkRaccoon(time) {
       }
     } else{
       stopAnimations();
+      if(endGame){
+        endGame = false;
+        stopSoundAnimals();
+        findSound("inGame").stop();
+        findSound("endGame").play();
+        // play("./../resources/audios/soundtracks/endGame.mp3", 0.05, "endGame", 0,true);
+      }
       if (cameraFinishMovement.y >= 1) {
         myRacconCursorMesh.position.x = raccoons[0][0].position.x;
         var cameraFinishDistance = {x:Math.abs(startCameraFinishPosition.x - 80),
@@ -1508,7 +1635,7 @@ function walkRaccoon(time) {
                                                       '<div>'+ timePassed + '</div>' +
                                                       '<div>'+ "Balloons Popped: " + balloonPopped + "/5<br>" + '</div>' +
                                                       '<div style="padding: 50px;">' +
-                                                        '<button id = "button2" onclick="location.href=\'./../index.html\'">Main Menu</button>' +
+                                                        '<button id = "button2" onclick="location.href=\'./../menu.html\'">Main Menu</button>' +
                                                       '</div>' +
                                                     '</div>';
 
@@ -1796,11 +1923,20 @@ function tail(i) {
 }
 
 function yoyo(i) {
+
+  if (frontLegsDirection[i] == 1 && raccoons[i][1].shoulder_L_014.rotation.x > 0.5*Math.PI && footStep[i]) {
+    footStep[i] = false;
+    findSound("firstSteps" + i).play()
+    findSound("secondSteps" + i).play()
+  }
+  
+  if (frontLegsDirection[i] == -1) footStep[i] = true;
+
   if (raccoons[i][1].shoulder_L_014.rotation.x >= 0.65*Math.PI || 
     raccoons[i][1].shoulder_L_014.rotation.x <= startRotationShoulderL[i].x) {
       frontLegsDirection[i] *= -1; 
       if (i != 0 && frontLegsDirection[i] == 1) {
-        legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 90)/20)*5;
+        legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 70)/20)*5;
       } 
   }
 }
