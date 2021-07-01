@@ -212,7 +212,7 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
   mesh.position.x = x;
   mesh.position.y = y;
   mesh.position.z = z;
-  mesh.receiveShadow = true;
+  // mesh.receiveShadow = true;
   mesh.frustumCulled = true;
   scene.add(mesh);
 }
@@ -313,8 +313,8 @@ function trex1(x, y, z , t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
       if (object.name.substring(0, 6) == "Bip001") {
         var v = parseInt(object.name.substring(object.name.length-2, object.name.length));
@@ -396,8 +396,8 @@ function chicken1(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
 
@@ -434,8 +434,8 @@ function chicken2(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
     
@@ -467,8 +467,8 @@ function chicken3(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
 
@@ -499,8 +499,8 @@ function chicken4(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
 
@@ -556,8 +556,8 @@ function chicken5(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
     
@@ -592,8 +592,8 @@ function pigeon1(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
 
@@ -637,8 +637,8 @@ function seal1(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
     var a= "Bone003_04"
@@ -672,8 +672,8 @@ function giraffe1(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
 
@@ -729,8 +729,8 @@ function elephant1(x, y, z, t){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       }
     });
 
@@ -810,8 +810,8 @@ function myTribune(){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       } 
     });
     scene.add(root);
@@ -831,8 +831,8 @@ function finishLine(){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
         object.material.depthWrite = true;
       } 
     });
@@ -860,8 +860,8 @@ function myRaccoon(z, i){
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       } 
     });
 
@@ -921,18 +921,18 @@ function myDirectionalLight(){
   const light = new THREE.DirectionalLight(color, intensity);
   light.position.set(300, 300, 0);
   light.target.position.set(0, 0, 0);
-  light.castShadow = true;
-  light.shadow.camera.top = 300;
-  light.shadow.camera.bottom = -300;
-  light.shadow.camera.right = 300;
-  light.shadow.camera.left = -300;
-  light.shadow.mapSize.width = 60000;
-  light.shadow.mapSize.height = 60000;
-  light.shadow.bias = -0.0005;
-  light.shadow.camera.far = 1000;
+  // light.castShadow = true;
+  // light.shadow.camera.top = 300;
+  // light.shadow.camera.bottom = -300;
+  // light.shadow.camera.right = 300;
+  // light.shadow.camera.left = -300;
+  // light.shadow.mapSize.width = 60000;
+  // light.shadow.mapSize.height = 60000;
+  // light.shadow.bias = -0.0005;
+  // light.shadow.camera.far = 1000;
 
-  const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
-  scene.add(cameraHelper);
+  // const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
+  // scene.add(cameraHelper);
 
   const helper = new THREE.DirectionalLightHelper(light);
   scene.add(helper);
@@ -965,8 +965,8 @@ function myBallon() {
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       } 
     });
   
@@ -1063,8 +1063,8 @@ function tree(i, x, y, z, scale) {
     root.traverse((object) => {
       if (object.isMesh){
         object.frustumCulled = true;        
-        object.castShadow = true;
-        object.receiveShadow = true;
+        // object.castShadow = true;
+        // object.receiveShadow = true;
       } 
     });
 
@@ -1121,7 +1121,7 @@ function init(){
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   
-  renderer.shadowMap.enabled = true;
+  // renderer.shadowMap.enabled = true;
   // camera.position.set(0, 10, 20);
   // camera.lookAt(0, 0, 0);
   // controls.target.set(0, 0, 0);
