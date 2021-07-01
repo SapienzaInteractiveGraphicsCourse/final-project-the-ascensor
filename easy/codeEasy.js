@@ -1385,11 +1385,8 @@ var tail2 = [];
 
 var footStep = [false, false, false, false, false];
 
-var step1Camera = 9/400; 
 var start1Camera = -4.5;
-var step2CameraZ = 20.5/400;
 var start2CameraZ = 4.5;
-var step2CameraX = -23.16/400;
 var start2CameraX = -60;
 var one = true;
 var startingTime;
@@ -1462,12 +1459,16 @@ function findSound(idValue){
 }
 
 function walkRaccoon(time) {
+  var weight = fps/boostfps;
   if (start1Camera < 4.5) {
+    var step1Camera = 9/(400*weight); 
     start1Camera += step1Camera;
     camera.position.set(-60, 3, start1Camera);
     camera.lookAt(-69.3, 0.1, start1Camera);
   } else if (start2CameraZ < 25) {
     // -70.7*1.2, 3, 25
+    var step2CameraZ = 20.5/(400*weight);
+    var step2CameraX = -23.16/(400*weight);
     start2CameraZ += step2CameraZ;
     start2CameraX += step2CameraX;
     camera.position.set(start2CameraX, 3, start2CameraZ);
@@ -1583,6 +1584,7 @@ function walkRaccoon(time) {
         findSound("endGame").play();
       }
       if (cameraFinishMovement.y >= 1) {
+        cameraFinishStepsAnimation = 200 * weight;
         myRacconCursorMesh.position.x = raccoons[0][0].position.x;
         var cameraFinishDistance = {x:Math.abs(startCameraFinishPosition.x - 80),
                                     y:Math.abs(startCameraFinishPosition.y - 1),  
