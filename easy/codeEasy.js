@@ -1229,12 +1229,12 @@ function render(time) {
 
   if (time <= 1) fps++;
   else {
-    if (setFps) {
-      setFps = false;
-      setSpeedFps()
-    }
-    print(legStepsAnimation);
     if (allReady){
+      if (setFps) {
+        setFps = false;
+        setSpeedFps()
+      }
+      print(legStepsAnimation);
       barSpeed -= 0.001;
       boostBalloon -= 0.0003;
       if(barSpeed < 0) barSpeed = 0;
@@ -1938,7 +1938,7 @@ function yoyo(i) {
     raccoons[i][1].shoulder_L_014.rotation.x <= startRotationShoulderL[i].x) {
       frontLegsDirection[i] *= -1; 
       if (i != 0 && frontLegsDirection[i] == 1) {
-        legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 70)/20)*5;
+        // legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 70)/20)*5;
       } 
   }
 }
