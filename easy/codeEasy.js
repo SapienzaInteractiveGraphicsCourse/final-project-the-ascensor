@@ -13,7 +13,7 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 const loadingManager = new THREE.LoadingManager();
 const scene = new THREE.Scene();
 var gltfLoader = new GLTFLoader(loadingManager);
-// const controls = new OrbitControls(camera, document.querySelector('.parent'));
+const controls = new OrbitControls(camera, document.querySelector('.parent'));
 var myRacconCursorMesh;
 var raccoons = [];
 var raccoonLoaded = 0;
@@ -758,44 +758,44 @@ function elephant1(x, y, z, t){
 
 function tribunePopulation(){
   chicken1(0, 4, -49, 400);
-  chicken1(10, 4, -52, 300);
-  chicken1(-15, 4, -50, 500);
+  // chicken1(10, 4, -52, 300);
+  // chicken1(-15, 4, -50, 500);
 
   chicken2(20, 4.1, -50, 450);
-  chicken2(5, 7.1, -59, 550);
-  chicken2(-8, 10.1, -68.5, 150);
+  // chicken2(5, 7.1, -59, 550);
+  // chicken2(-8, 10.1, -68.5, 150);
 
   chicken3(30, 7, -53, 250);
-  chicken3(-28.5, 16.1, -87, 375);
-  chicken3(-17.25, 13.1, -77, 425);
+  // chicken3(-28.5, 16.1, -87, 375);
+  // chicken3(-17.25, 13.1, -77, 425);
 
   chicken4(40, 16.1, -83.5, 264);
-  chicken4(45, 13.1, -74, 394);
-  chicken4(36, 10.1, -64, 204);
+  // chicken4(45, 13.1, -74, 394);
+  // chicken4(36, 10.1, -64, 204);
 
   chicken5(-38.5, 4.1, -50, 298);
-  chicken5(-44.5, 7.1, -59, 379);
-  chicken5(-40.8, 10.1, -67, 403);
+  // chicken5(-44.5, 7.1, -59, 379);
+  // chicken5(-40.8, 10.1, -67, 403);
 
   pigeon1(-70, 4.1, -50.2, 378);
-  pigeon1(-65.16, 16.1, -83.9, 413);
-  pigeon1(69, 4.1, -46.4, 321);
+  // pigeon1(-65.16, 16.1, -83.9, 413);
+  // pigeon1(69, 4.1, -46.4, 321);
 
   trex1(-55, 4, -50, 900);
-  trex1(-60, 10.1, -68, 1000);
-  trex1(20, 10.1, -70, 1100);
+  // trex1(-60, 10.1, -68, 1000);
+  // trex1(20, 10.1, -70, 1100);
 
   seal1(-50, 16.1, -90, 486);
-  seal1(-45, 13.1, -80, 562);
-  seal1(-15, 7.1, -60, 562);
+  // seal1(-45, 13.1, -80, 562);
+  // seal1(-15, 7.1, -60, 562);
 
   giraffe1(48, 3.85, -46.5, 691);
-  giraffe1(54, 10.1, -66.9, 758);
-  giraffe1(16, 16.1, -84.1, 1200);
+  // giraffe1(54, 10.1, -66.9, 758);
+  // giraffe1(16, 16.1, -84.1, 1200);
 
   elephant1(-30, 7.1, -69.5, 727);
-  elephant1(-0.5, 13.1, -86.9, 653);
-  elephant1(63, 16.1, -96.9, 365);
+  // elephant1(-0.5, 13.1, -86.9, 653);
+  // elephant1(63, 16.1, -96.9, 365);
 
 }
 
@@ -803,10 +803,10 @@ function myTribune(){
   tribunePopulation();
   gltfLoader.load('./../resources/models/tribune/scene.gltf', function (gltf){
     const root = gltf.scene;
-    root.scale.multiplyScalar(0.01);
+    root.scale.multiplyScalar(0.005);
     root.scale.x *= 2;
     root.scale.z *= 3;
-    root.position.z = -70;
+    root.position.z = -30;
     root.rotation.y = Math.PI * .5;
     root.traverse((object) => {
       if (object.isMesh){
@@ -1080,41 +1080,41 @@ function trees(){
   tree(1, -90, 0, -70, 0.01);
   tree(1, -140, 0, -50, 0.007);
   tree(1, -120, 0, -30, 0.012);
-  tree(1, 90, 0, -70, 0.01);
-  tree(1, 140, 0, -90, 0.02);
-  tree(1, 120, 0, -140, 0.03);
+  // tree(1, 90, 0, -70, 0.01);
+  // tree(1, 140, 0, -90, 0.02);
+  // tree(1, 120, 0, -140, 0.03);
 
   //tree2
   tree(2, -80, 0, -40, 1);
   tree(2, -20, 0, -150, 3);
   tree(2, -130, 0, 20, 1);
-  tree(2, 80, 0, -40, 1.4);
-  tree(2, 20, 0, -150, 3);
-  tree(2, -150, 0, -20, 1.3);
+  // tree(2, 80, 0, -40, 1.4);
+  // tree(2, 20, 0, -150, 3);
+  // tree(2, -150, 0, -20, 1.3);
   
   //tree3
   tree(3, -90, -1, -170, 0.05);
   tree(3, -90, -1, 20, 0.02);
   tree(3, -300, -1, 20, 0.06);
-  tree(3, 90, -1, -190, 0.07);
-  tree(3, -120, -1, 40, 0.03);
-  tree(3, -270, -1, -30, 0.05);
+  // tree(3, 90, -1, -190, 0.07);
+  // tree(3, -120, -1, 40, 0.03);
+  // tree(3, -270, -1, -30, 0.05);
   
   //tree4
   tree(4, -50, -1, -170, 0.1);
   tree(4, -150, -1, -150, 0.05);
   tree(4, -120, -1, -5, 0.02);
-  tree(4, 50, -1, -170, 0.15);
-  tree(4, -180, -1, 50, 0.04);
-  tree(4, -90, -1, 10, 0.01);
+  // tree(4, 50, -1, -170, 0.15);
+  // tree(4, -180, -1, 50, 0.04);
+  // tree(4, -90, -1, 10, 0.01);
   
   //tree5
   tree(5, 150, 0, -200, 0.2);
   tree(5, 300, 0, -140, 0.2);
   tree(5, -280, 0, -190, 0.18);
-  tree(5, 250, 0, -180, 0.25);
-  tree(5, -300, 0, -140, 0.2);
-  tree(5, 30, 0, -230, 0.2);
+  // tree(5, 250, 0, -180, 0.25);
+  // tree(5, -300, 0, -140, 0.2);
+  // tree(5, 30, 0, -230, 0.2);
 }
 
 function init(){
