@@ -1175,8 +1175,8 @@ function init(){
   myEmisphereLight();
   myDirectionalLight();
   trackField();
-  // trees();
-  // finishLine();
+  trees();
+  finishLine();
 
   myRacconCursor();
   for (var i = 0; i < spawnBalloonBoolean.length; i++) myBallon();
