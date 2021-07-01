@@ -146,8 +146,8 @@ function trackField(){
   var trackTexture = './../resources/textures/runningTrackField.png';
   var grassTexture = './../resources/textures/grass.png';
 
-  // myPlane(600, 600, grassTexture, 0, -0.1, 0, 1, 120, false, true);
-  myPlane(200, 100, grassTexture, 0, -0.1, 0, 1, 40, false, true);
+  myPlane(600, 600, grassTexture, 0, -0.1, 0, 1, 120, false, true);
+  // myPlane(200, 100, grassTexture, 0, -0.1, 0, 1, 40, false, true);
 
   myPlane((5*height + 6*lineHeigth), lineHeigth, trackTexture, (-1/2)*(width + lineHeigth), 0, 0, (height / lineHeigth), repeatEndLines, true);
 
@@ -188,7 +188,7 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
   if(grass){
     textureField.wrapS = THREE.RepeatWrapping;
     textureField.wrapT = THREE.RepeatWrapping;
-    textureField.repeat.set(repeat, repeat/2);
+    textureField.repeat.set(repeat, repeat);
   } else {
     
     textureField.wrapS = THREE.MirroredRepeatWrapping;
@@ -1122,6 +1122,8 @@ function init(){
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   
+  camera.position.set(-60, 3, -4.5);
+  camera.lookAt(-69.3, 0.1, -4.5);
   // renderer.shadowMap.enabled = true;
   // camera.position.set(0, 10, 20);
   // camera.lookAt(0, 0, 0);
