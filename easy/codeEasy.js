@@ -1216,7 +1216,7 @@ function onWindowResize() {
 
 }
 
-var boostfps = 92;
+var boostfps = 144;
 var fps = 0;
 var setFps = true;
 var startFps = true;
@@ -1241,7 +1241,6 @@ function render(time) {
         setFps = false;
         setSpeedFps()
       }
-      print(legStepsAnimation);
       barSpeed -= 0.001;
       boostBalloon -= 0.0003;
       if(barSpeed < 0) barSpeed = 0;
