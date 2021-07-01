@@ -927,8 +927,8 @@ function myDirectionalLight(){
   light.shadow.camera.bottom = -300;
   light.shadow.camera.right = 300;
   light.shadow.camera.left = -300;
-  light.shadow.mapSize.width = 60000;
-  light.shadow.mapSize.height = 60000;
+  light.shadow.mapSize.width = 60;
+  light.shadow.mapSize.height = 60;
   light.shadow.bias = -0.0005;
   light.shadow.camera.far = 1000;
 
