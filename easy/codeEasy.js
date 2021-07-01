@@ -146,7 +146,7 @@ function trackField(){
   var trackTexture = './../resources/textures/runningTrackField.png';
   var grassTexture = './../resources/textures/grass.png';
 
-  myPlane(600, 600, grassTexture, 0, -0.1, 0, 1, 120, false, true);
+  myPlane(200, 100, grassTexture, 0, -0.1, 0, 1, 40, false, true);
 
   myPlane((5*height + 6*lineHeigth), lineHeigth, trackTexture, (-1/2)*(width + lineHeigth), 0, 0, (height / lineHeigth), repeatEndLines, true);
 
@@ -187,7 +187,7 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
   if(grass){
     textureField.wrapS = THREE.RepeatWrapping;
     textureField.wrapT = THREE.RepeatWrapping;
-    textureField.repeat.set(repeat, repeat);
+    textureField.repeat.set(repeat, repeat/2);
   } else {
     
     textureField.wrapS = THREE.MirroredRepeatWrapping;
@@ -934,8 +934,8 @@ function myDirectionalLight(){
   // const cameraHelper = new THREE.CameraHelper(light.shadow.camera);
   // scene.add(cameraHelper);
 
-  const helper = new THREE.DirectionalLightHelper(light);
-  scene.add(helper);
+  // const helper = new THREE.DirectionalLightHelper(light);
+  // scene.add(helper);
   scene.add(light);
   scene.add(light.target);
 }
