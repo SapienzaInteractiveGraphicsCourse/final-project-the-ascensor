@@ -169,7 +169,7 @@ function trackField(){
 
   myPlane((5*height + 6*lineHeigth), lineHeigth, trackTexture, (1/2)*(width + lineHeigth), 0, 0, (height / lineHeigth), repeatEndLines, true);
 
-  // myTribune();
+  myTribune();
 
 }
 
