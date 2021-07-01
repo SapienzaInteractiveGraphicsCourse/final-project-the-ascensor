@@ -87,42 +87,42 @@ loadingManager.onLoad = function ( ) {
                     '<b>D</b>' +
                   '</div>';
         createCanvas(orbitDiv, div, div2, html);
-        // play("./../resources/audios/soundtracks/inGame.mp3", 0.05, true, false, "inGame", 0);
-        // play("./../resources/audios/soundtracks/endGame.mp3", 0.05, true, false, "endGame", 0);
-        // play("./../resources/audios/soundtracks/countdown.mp3", 0.05, false, false, "countdown", 0);
-        // play("./../resources/audios/chicken/chicken1.mp3", 0.004, true, true, "", 200);
+        play("./../resources/audios/soundtracks/inGame.mp3", 0.05, true, false, "inGame", 0);
+        play("./../resources/audios/soundtracks/endGame.mp3", 0.05, true, false, "endGame", 0);
+        play("./../resources/audios/soundtracks/countdown.mp3", 0.05, false, false, "countdown", 0);
+        play("./../resources/audios/chicken/chicken1.mp3", 0.004, true, true, "", 200);
         // play("./../resources/audios/chicken/chicken2.mp3", 0.004, true, true, "", 400);
         // play("./../resources/audios/chicken/chicken3.mp3", 0.004, true, true, "", 600);
         // play("./../resources/audios/chicken/chicken2.mp3", 0.004, true, true, "", 800);
         // play("./../resources/audios/chicken/chicken1.mp3", 0.004, true, true, "", 1000);
-        // play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 450);
+        play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 450);
         // play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 550);
         // play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 750);
-        // play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 550);
+        play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 550);
         // play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 750);
         // play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 950);
-        // play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 710);
+        play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 710);
         // play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 910);
         // play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 1110);
-        // play("./../resources/audios/seal/seal.mp3", 0.01, true, true, "", 375);
-        // play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 225);
+        play("./../resources/audios/seal/seal.mp3", 0.01, true, true, "", 375);
+        play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 225);
         // play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 525);
         // play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 725);
 
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps0", 0);
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps0", 230);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps0", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps0", 230);
         
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps1", 0);
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps1", 230);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps1", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps1", 230);
         
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps2", 0);
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps2", 230);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps2", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps2", 230);
         
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps3", 0);
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps3", 230);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps3", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps3", 230);
         
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps4", 0);
-        // play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps4", 230);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps4", 0);
+        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps4", 230);
         allReady = true;
     }, false); 
   }
@@ -1013,7 +1013,7 @@ function onclick(event) {
     selectedObject = intersects[0].object;
     while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
-    // play("./../resources/audios/balloon/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05, false, true, "", 0);
+    play("./../resources/audios/balloon/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05, false, true, "", 0);
     boostBalloon += 0.2;
     balloonPopped += 1;
     balloons.remove(selectedObject);
@@ -1524,7 +1524,7 @@ function walkRaccoon(time) {
   if ((time - startingTime) >= 0 && (time - startingTime) <= 1){
     if(countdownSound){
       countdownSound = false;
-      // findSound("countdown").play();
+      findSound("countdown").play();
     }
     var countdown = document.getElementById("countdown")
     countdown.innerHTML = 3;
@@ -1549,7 +1549,7 @@ function walkRaccoon(time) {
     var opacity = 1 - (time - startingTime - 3);
     if(inGame){
       inGame = false;
-      // findSound("inGame").play();
+      findSound("inGame").play();
     }
     countdown.setAttribute("style","font-size: 220px; opacity: " + opacity + ";");
   } 
@@ -1623,8 +1623,8 @@ function walkRaccoon(time) {
       if(endGame){
         endGame = false;
         stopSoundAnimals();
-        // findSound("inGame").stop();
-        // findSound("endGame").play();
+        findSound("inGame").stop();
+        findSound("endGame").play();
       }
       if (cameraFinishMovement.y >= 1) {
         myRacconCursorMesh.position.x = raccoons[0][0].position.x;
@@ -1937,8 +1937,8 @@ function yoyo(i) {
 
   if (frontLegsDirection[i] == 1 && raccoons[i][1].shoulder_L_014.rotation.x > 0.5*Math.PI && footStep[i]) {
     footStep[i] = false;
-    // findSound("firstSteps" + i).play()
-    // findSound("secondSteps" + i).play()
+    findSound("firstSteps" + i).play()
+    findSound("secondSteps" + i).play()
   }
   
   if (frontLegsDirection[i] == -1) footStep[i] = true;
