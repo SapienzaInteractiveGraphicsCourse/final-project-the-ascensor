@@ -1173,7 +1173,7 @@ function init(){
   myDirectionalLight();
   trackField();
   // trees();
-  finishLine();
+  // finishLine();
 
   myRacconCursor();
   for (var i = 0; i < spawnBalloonBoolean.length; i++) myBallon();
