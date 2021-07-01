@@ -1215,16 +1215,32 @@ function onWindowResize() {
 
 }
 
+var boostfps = 92;
+var fps = 0;
+var setFps = true;
+
+function setSpeedFps() {
+  var weight = fps/boostfps;
+  for (var i = 0; i<5; i++) legStepsAnimation[i]*=weight;
+}
+
 function render(time) {
   time *= 0.001; 
 
-  if (allReady){
-    barSpeed -= 0.001;
-    boostBalloon -= 0.0003;
-    if(barSpeed < 0) barSpeed = 0;
-    if(boostBalloon < 0) boostBalloon = 0;
-    walkRaccoon(time);  
-  }
+  if (time <= 1) fps++;
+  else {
+    if (setFps) {
+      setFps = false;
+      setSpeedFps()
+    }
+    if (allReady){
+      barSpeed -= 0.001;
+      boostBalloon -= 0.0003;
+      if(barSpeed < 0) barSpeed = 0;
+      if(boostBalloon < 0) boostBalloon = 0;
+      walkRaccoon(time);  
+    }
+  } 
 
   renderer.render(scene, camera);
   TWEEN.update();
