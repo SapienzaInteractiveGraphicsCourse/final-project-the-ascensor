@@ -1233,7 +1233,7 @@ function render(time) {
       setFps = false;
       setSpeedFps()
     }
-    print(legStepsAnimation[i]);
+    print(legStepsAnimation);
     if (allReady){
       barSpeed -= 0.001;
       boostBalloon -= 0.0003;
