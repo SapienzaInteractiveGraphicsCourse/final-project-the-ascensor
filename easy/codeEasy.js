@@ -146,6 +146,7 @@ function trackField(){
   var trackTexture = './../resources/textures/runningTrackField.png';
   var grassTexture = './../resources/textures/grass.png';
 
+  // myPlane(600, 600, grassTexture, 0, -0.1, 0, 1, 120, false, true);
   myPlane(200, 100, grassTexture, 0, -0.1, 0, 1, 40, false, true);
 
   myPlane((5*height + 6*lineHeigth), lineHeigth, trackTexture, (-1/2)*(width + lineHeigth), 0, 0, (height / lineHeigth), repeatEndLines, true);
@@ -1218,6 +1219,8 @@ function onWindowResize() {
 var boostfps = 92;
 var fps = 0;
 var setFps = true;
+var startFps = true;
+var timeFps;
 
 function setSpeedFps() {
   var weight = fps/boostfps;
@@ -1227,10 +1230,14 @@ function setSpeedFps() {
 function render(time) {
   time *= 0.001; 
 
-  if (time <= 1) fps++;
-  else {
-    if (allReady){
-      if (setFps) {
+  if (allReady){
+    if (startFps) {
+      startFps = false;
+      timeFps = time;
+    } 
+    if (time <= timeFps + 1) fps++;
+    else {
+      if (setFps) {        
         setFps = false;
         setSpeedFps()
       }
@@ -1241,7 +1248,8 @@ function render(time) {
       if(boostBalloon < 0) boostBalloon = 0;
       walkRaccoon(time);  
     }
-  } 
+  }
+   
 
   renderer.render(scene, camera);
   TWEEN.update();
