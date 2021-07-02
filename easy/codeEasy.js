@@ -32,6 +32,7 @@ var endRace = true;                                 // Variable used to tell us 
 var inGame = true;                                  // Variable used to play one time the in game song.
 var endGame = true;                                 // Variable used to play one time the end game song.
 var countdownSound = true;                          // Variable used to play one time the coundown sound.
+var endCountdown = true;                            // Variable used to delete the text "go" of the countdown.
 
 /*** FPS setting ***/
 /* These settings are used to fix the speed of the animation slowed down by a low-performance computer and simulate, 
@@ -184,6 +185,8 @@ loadingManager.onLoad = function ( ) {
     document.getElementById("clickText").innerHTML="";
     document.getElementById("clickText").appendChild(button);
     button.addEventListener("click", function() {
+			var x = localStorage.getItem("shadow");
+			print(x);
       var orbitDiv = document.getElementById("orbitDiv");
       var div = document.createElement('div');
       div.setAttribute("style", "position: relative;");
@@ -277,6 +280,21 @@ function environment(){
   myTribune();
   trees();
   finishLine();
+  myEmisphereLight();
+  myDirectionalLight();
+  fog();
+  for (var i = 0; i < spawnBalloonBoolean.length; i++) myBallon();
+  spawnRaccoon();
+}
+
+// Function that spawn all raccoon and the cursor on the our raccoon
+function spawnRaccoon() {
+  myRacconCursor();
+  myRaccoon(4.5, 0);
+  myRaccoon(2.25, 1);
+  myRaccoon(0, 2);
+  myRaccoon(-2.25, 3);
+  myRaccoon(-4.5, 4);
 }
 
 // Function that create the general plane with track field.
@@ -1219,6 +1237,8 @@ function raccoonBones(root) {
   r_index_01_R_00 : root.getObjectByName("r_index_01_R_00")};
 }
 
+/* Function that creates a cone with three sides to simulate a pyramid.
+   This pyramid rotated backwards indicates which is our raccoon. Also sets the animation of the cursor */
 function myRacconCursor() {
   const myRacconCursor = new THREE.ConeGeometry(0.3, 1, 4);
   const myRacconCursorMat = new THREE.MeshPhongMaterial({
@@ -1245,6 +1265,37 @@ function myRacconCursor() {
   scene.add(myRacconCursorMesh);
 }
 
+// Function that add at the scene the emisphere light.
+function myEmisphereLight(){
+  const skyColor = 0xB1E1FF;
+  const groundColor = 0xB97A20;
+  const intensity = 1;
+  const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+  scene.add(light);
+}
+
+// Function that add at the scene the directional light.
+function myDirectionalLight(){
+  const color = 0xFFFFFF;
+  const intensity = 5;
+  const light = new THREE.DirectionalLight(color, intensity);
+  light.position.set(300, 300, 0);
+  light.target.position.set(0, 0, 0);
+  scene.add(light);
+  scene.add(light.target);
+}
+
+// Function that adds light blue fog to the scene, simulating an unfinished plane with a sky.
+function fog() {
+  const near = 1;
+  const far = 500;
+  const color = '#62cff4';
+  scene.fog = new THREE.Fog(color, near, far);
+  scene.background = new THREE.Color(color);
+}
+
+/* Function that load the balloon and set its starting position not visible in camera.
+   In addition, the material is modified to make it transparent and with a random colour.*/
 function myBallon() {
   gltfLoader.load('./../resources/models/balloon/scene.gltf', function (gltf){
     const root = gltf.scene;
@@ -1270,8 +1321,12 @@ function myBallon() {
   });
 }
 
-function spawnBalloon(i, time) {
-  if (time > (i+1)*2 && spawnBalloonBoolean[i]) {
+/*  Function that fake spawn a ballon aimply move it to the position where it should be and start the animations.
+    Parameters:
+    - i: i represent the i-th balloon that spawn only if raccoon passed (-70 + (i+1)*20) units.
+ */
+function spawnBalloon(i) {
+  if (raccoons[0][0].position.x > (-70 + (i+1)*20) && spawnBalloonBoolean[i]) {
     spawnBalloonBoolean[i] = false
     balloonToSpawn[i].position.x = raccoons[0][0].position.x + 3 +(Math.random() - 0.5)*5;
     balloonToSpawn[i].position.y = 0;
@@ -1300,6 +1355,7 @@ function spawnBalloon(i, time) {
   } 
 }
 
+// Function triggered by mouse click to pop the balloon if clicked on.
 function onClickBalloon(event) {
   var selectedObject;
   var raycaster = new THREE.Raycaster();
@@ -1319,32 +1375,15 @@ function onClickBalloon(event) {
   }
 }
 
-function myEmisphereLight(){
-  const skyColor = 0xB1E1FF;
-  const groundColor = 0xB97A20;
-  const intensity = 1;
-  const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
-  scene.add(light);
-}
-
-function myDirectionalLight(){
-  const color = 0xFFFFFF;
-  const intensity = 5;
-  const light = new THREE.DirectionalLight(color, intensity);
-  light.position.set(300, 300, 0);
-  light.target.position.set(0, 0, 0);
-  scene.add(light);
-  scene.add(light.target);
-}
-
-function fog() {
-  const near = 1;
-  const far = 500;
-  const color = '#62cff4';
-  scene.fog = new THREE.Fog(color, near, far);
-  scene.background = new THREE.Color(color);
-}
-
+/*  Function that loads the audio and starts it up if possible.
+    Parameters:
+    - audio: the path of the audio file;
+    - volume: volume of playback;
+    - loop: if true the audio is in loop;
+    - preload: if true the audio starts immediately;
+    - idValue: string that identify the audio in audios array;
+    - delay: time before the audio starts.
+ */
 function play(audio, volume, loop, preload, idValue, delay) { 
   const listener = new THREE.AudioListener();
   camera.add( listener );
@@ -1361,6 +1400,10 @@ function play(audio, volume, loop, preload, idValue, delay) {
   }, delay);
 }
 
+/*  Function that return audio by id.
+    Parameters:
+    - idValue: string that identify the audio in audios array.
+ */
 function findSound(idValue){
   for(var i = 0; i < sounds.length; i++){
     if(sounds[i][1] == idValue){
@@ -1369,88 +1412,78 @@ function findSound(idValue){
   }
 }
 
+// Function that stop all animals audio.
 function stopSoundAnimals(){
   for(var i = 0; i < sounds.length; i++){
     if(sounds[i][1] == ""){
       sounds[i][0].stop();
     }
-    
   }
 }
 
+/* Function triggere when some when any key on the keyboard is pressed. In particular,
+   when A or D is pressed, the amount of addition or removal from the bar speed is calculated.*/
+function onKeyDown(event) {
+  var base = (maxSpeed*20) /100;
+  var percentage = (100*barSpeed)/maxSpeed;
+  var decrease = (maxSpeed*15) /100;
+  switch(event.keyCode){
+    case 65:
+      if (!a) {
+        a = true;
+        d = false;
+        barSpeed += base - ((decrease*percentage)/100);
+        if(barSpeed>maxSpeed) barSpeed = maxSpeed;
+      } else barSpeed -= base;
+      break;
+    case 68:
+      if (!d) {
+        d = true;
+        a = false;
+        barSpeed += base - ((decrease*percentage)/100);
+        if(barSpeed>maxSpeed) barSpeed = maxSpeed;
+      } else barSpeed -= base;
+      break;
+  }
+}
+
+// Main function.
 function init(){
+  /*** Renderer ***/
   renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   
+  /*** Camera ***/
   camera.position.set(-60, 3, -4.5);
   camera.lookAt(-69.3, 0.1, -4.5);
-  // camera.position.set(0, 10, 20);
-  // camera.lookAt(0, 0, 0);
   // controls.target.set(0, 0, 0);
   // controls.update();
+
+  /*** Scene ***/
   scene.background = new THREE.Color("lightblue");
   scene.add(balloons)
-  fog();
   
+  /*** Event Listener ***/  
   window.addEventListener( 'resize', onWindowResize, false );
-
-  var onKeyDown = function(event) {
-    var base = (maxSpeed*20) /100;
-    var percentage = (100*barSpeed)/maxSpeed;
-    var decrease = (maxSpeed*15) /100;
-    switch(event.keyCode){
-      case 65:
-        if (!a) {
-          a = true;
-          d = false;
-          barSpeed += base - ((decrease*percentage)/100);
-          if(barSpeed>maxSpeed) barSpeed = maxSpeed;
-        } else{
-          barSpeed -= base;
-        }
-        break;
-      case 68:
-        if (!d) {
-          d = true;
-          a = false;
-          barSpeed += base - ((decrease*percentage)/100);
-          if(barSpeed>maxSpeed) barSpeed = maxSpeed;
-        } else{
-          barSpeed -= base;
-        }
-        break;
-    }
-  }
   document.addEventListener('keydown', onKeyDown, false);
-  
   document.addEventListener("click", onClickBalloon, true);
 
-  myEmisphereLight();
-  myDirectionalLight();
-
-
+  /*** Set environment ***/
   environment();
 
-  myRacconCursor();
-
-  for (var i = 0; i < spawnBalloonBoolean.length; i++) myBallon();
-
-  myRaccoon(4.5, 0);
-  myRaccoon(2.25, 1);
-  myRaccoon(0, 2);
-  myRaccoon(-2.25, 3);
-  myRaccoon(-4.5, 4);
-  
+  /*** Start frame rendering ***/
   requestAnimationFrame(render);
 }
 
+// Resizes the renderer if the window changes its height or width.
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
+// Function that creates a canvas containing the HUD and the game.
 function createCanvas(orbitDiv, div, div2, html){
   orbitDiv.innerHTML= "";
   div2.setAttribute("id","hud");
@@ -1463,25 +1496,32 @@ function createCanvas(orbitDiv, div, div2, html){
   orbitDiv.appendChild(div);
 }
 
+// Function that speeds up all raccoon animations to simulate the speed obtained with 144 FPS.
 function setSpeedFps() {
   var weight = fps/boostfps;
   for (var i = 0; i<5; i++) legStepsAnimation[i]*=weight;
 }
 
+// Function that stop all animations.
 function stopAnimations(){
   for(var i = 0; i < animations.length ; i++){
     animations[i].stop();
   }
 }
 
-function walkRaccoon(time) {
-  var weight = fps/boostfps;
-  if (start1Camera < 4.5) {
+/*  Function that animates all things in the game (camera, raccoons, internal html and so on).
+    Parameters:
+    - time: time passed by the reneder function. This is the time elapsed since the first frame.
+ */
+function startGame(time) {
+  /*** Start game, camer and lookAt animations ***/
+  var weight = fps/boostfps;        // Weight that speeds up this camera and lookAt animation to simulate a result obtained with 144 FPS.
+  if (start1Camera < 4.5) {         // First animation of the camera and lookAt. From the farthest raccoon to the nearest raccoon.
     var step1Camera = 9/(400*weight); 
     start1Camera += step1Camera;
     camera.position.set(-60, 3, start1Camera);
     camera.lookAt(-69.3, 0.1, start1Camera);
-  } else if (start2CameraZ < 25) {
+  } else if (start2CameraZ < 25) {  // Second animation of the camera and lookAt. From the nearest raccoon to start game point.
     var step2CameraZ = 20.5/(400*weight);
     var step2CameraX = -23.16/(400*weight);
     start2CameraZ += step2CameraZ;
@@ -1490,10 +1530,12 @@ function walkRaccoon(time) {
     camera.lookAt(-69.3, 0.1, 4.5);
   } else 
   if (one) {
-    startingTime = time;
+    startingTime = time; // Use this time as a starting point for the next calculations.
     one = false;
   }
-  if ((time - startingTime) >= 0 && (time - startingTime) <= 1){
+
+  /*** Countdown ***/
+  if ((time - startingTime) >= 0 && (time - startingTime) <= 1){  // First second.
     if(countdownSound){
       countdownSound = false;
       findSound("countdown").play();
@@ -1503,19 +1545,19 @@ function walkRaccoon(time) {
     var size = 140 + 220*(time-startingTime);
     countdown.setAttribute("style","font-size: " + size + "px;");
   }
-  if ((time - startingTime) >= 1 && (time - startingTime) <= 2){
+  if ((time - startingTime) >= 1 && (time - startingTime) <= 2){  // Second second.
     var countdown = document.getElementById("countdown")
     countdown.innerHTML = 2;
     var size = 140 + 220*(time-startingTime - 1);
     countdown.setAttribute("style","font-size: " + size + "px;");
   }
-  if ((time - startingTime) >= 2 && (time - startingTime) <= 3){
+  if ((time - startingTime) >= 2 && (time - startingTime) <= 3){  // Third second.
     var countdown = document.getElementById("countdown")
     countdown.innerHTML = 1;
     var size = 140 + 220*(time-startingTime - 2);
     countdown.setAttribute("style","font-size: " + size + "px;");
   }
-  if ((time - startingTime) >= 3 && (time - startingTime) <= 4){
+  if ((time - startingTime) >= 3 && (time - startingTime) <= 4){  // Fourth second and "GO!" text.
     var countdown = document.getElementById("countdown")
     countdown.innerHTML = "GO!";
     var opacity = 1 - (time - startingTime - 3);
@@ -1525,73 +1567,96 @@ function walkRaccoon(time) {
     }
     countdown.setAttribute("style","font-size: 220px; opacity: " + opacity + ";");
   } 
-  if ((time - startingTime) >= 4 && !endRace){
+  if ((time - startingTime) >= 4 && endCountdown){                // Fifth second and eliminate the text.
+    endCountdown = false;
     var countdown = document.getElementById("countdown");
     countdown.innerHTML = "";
   }
+
+  /*** Game started ***/
   if(raccoonLoaded == 5 && (time - startingTime) >= 3){
-    var finish = true;
+    var finish = false;
+    // Search if some raccoon win the game.
     for(var i = 0; i < raccoons.length; i++){
       if(raccoons[i][0].position.x > 69.3){
-        finish = false;
+        finish = true;
       }
     }
-    if (finish){
+    if (!finish){ // If the game is not finished.
+      // Move the camera with our raccoon
       camera.position.set(raccoons[0][0].position.x*1.2, 3, 25);
       camera.lookAt(raccoons[0][0].position.x, raccoons[0][0].position.y, raccoons[0][0].position.z);
 
+      // Set some value for the end game animation.
       startCameraFinishPosition = {x: raccoons[0][0].position.x*1.2, y: 3, z: 25};
       startCameraLookAtFinishPosition = {x: raccoons[0][0].position.x, y: raccoons[0][0].position.y, z: raccoons[0][0].position.z};
       cameraFinishMovement = startCameraFinishPosition;
       cameraLookAtFinishMovement = startCameraLookAtFinishPosition;
 
+      // At the start of the game the bar speed must be 0
       if(barSpeedReset){
         barSpeedReset = false;
         barSpeed = 0;
       }
+
+      // Update HUD in real time.
       hudUpdate(time, startingTime);
 
-      var timeInSecond = Math.round(time - startingTime - 3);
-      for (var i = 0; i < spawnBalloonBoolean.length; i ++) spawnBalloon(i, timeInSecond); 
+      // Spawn balloon.
+      for (var i = 0; i < spawnBalloonBoolean.length; i ++) spawnBalloon(i); 
+
+      // Move cursor with our raccoon
       myRacconCursorMesh.position.x = raccoons[0][0].position.x;
+
+      /*** Walk racccoon animation ***/
       for (var i = 0; i < raccoons.length; i++) {
+        // Move the whole model.
         var step = 3/legStepsAnimation[i];
         raccoons[i][0].position.x += step*barSpeedF(i);
 
+        // Rotate shoulders.
         walkFrontShoulderLeft(i);
         walkFrontShoulderRight(i);
+
+        // Rotate shins
         walkFrontShinRight(i);
         walkFrontShinLeft(i);
+        walkBackShin(i);
         
+        // Rotate feet.
         walkFrontFootLeft(i);
         walkFrontFootRight(i);
+        walkBackFootLeft(i);
+        walkBackFootRight(i); 
     
+        // Rotate thigs.
         walkBackThighLeft(i);
         walkBackThighRight(i);
         
-        walkBackShin(i);
-        
-        walkBackFootLeft(i);
-        walkBackFootRight(i);    
-        
-        walkSpine(i);
-    
-        walkRibCage(i);
-    
+        // Move and rotate torso, spine and neck.
+        walkSpine(i);    
+        walkRibCage(i);    
         walkNeck(i);
     
+        // Rotate tails joint.
         tail(i);
     
+        // Repeat all animation back and forth
         yoyo(i);
       }
-    } else{
+    } else{  // If the game is finished.
+      // Stop all animation for the photo finish.
       stopAnimations();
+
+      // Change the music and stop all sound with idValue = "".
       if(endGame){
         endGame = false;
         stopSoundAnimals();
         findSound("inGame").stop();
         findSound("endGame").play();
       }
+
+      // End game camera and lookAt animation. From its position to photo finish position.
       if (cameraFinishMovement.y >= 1) {
         cameraFinishStepsAnimation = 200 * weight;
         myRacconCursorMesh.position.x = raccoons[0][0].position.x;
@@ -1617,7 +1682,7 @@ function walkRaccoon(time) {
                                       z:cameraLookAtFinishMovement.z - stepsCameraLookAtFinish.z};
         camera.position.set(cameraFinishMovement.x, cameraFinishMovement.y, cameraFinishMovement.z);
         camera.lookAt(cameraLookAtFinishMovement.x, cameraLookAtFinishMovement.y, cameraLookAtFinishMovement.z);
-      } else if(endRace){
+      } else if(endRace){ // If end game camera and lookAt animation is finished, set the end game HUD
         endRace = false;
         if(position != 1) timePassed = "Time: N / D";
         document.getElementById("hud").innerHTML =  '<div align="center" class="overlay endScoreFont">' +
@@ -1635,18 +1700,118 @@ function walkRaccoon(time) {
   }
 }
 
+/*  Function that animates the front-left shoulder.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkFrontShoulderLeft(i) {
   var shoulderLStep = {x: changeShoulderL[i].x/legStepsAnimation[i], z: changeShoulderL[i].z/legStepsAnimation[i]};
   raccoons[i][1].shoulder_L_014.rotation.x += shoulderLStep.x * frontLegsDirection[i]*barSpeedF(i);
   raccoons[i][1].shoulder_L_014.rotation.z += shoulderLStep.z * frontLegsDirection[i]*barSpeedF(i);
 }
 
+/*  Function that animates the front-right shoulder.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkFrontShoulderRight(i) {
   var shoulderRStep = {x: changeShoulderR[i].x/legStepsAnimation[i], z: changeShoulderR[i].z/legStepsAnimation[i]};
   raccoons[i][1].shoulder_R_026.rotation.x += shoulderRStep.x * frontLegsDirection[i]*barSpeedF(i);
   raccoons[i][1].shoulder_R_026.rotation.z -= shoulderRStep.z * frontLegsDirection[i]*barSpeedF(i);
 }
 
+/*  Function that animates the front-right shin.
+    Parameters:
+    - i: the i-th raccoon.
+ */
+function walkFrontShinRight(i) {
+  var step1 = {x: changeShinFrontR[i]/(legStepsAnimation[i]*0.32)}
+  var step2 = {x: changeShinFrontR[i]/(legStepsAnimation[i]*0.68)}
+  if (shinFrontR1[i]) {
+    if (frontLegsDirection[i] == -1) {
+      shinFrontR1[i] = false;
+      shinFrontR2[i] = true;
+    }
+  } 
+  if (shinFrontR2[i]) {
+    raccoons[i][1].front_shin_R_028.rotation.x += step1.x * frontLegsDirection[i]*barSpeedF(i);
+    if (raccoons[i][1].shoulder_L_014.rotation.x <= 0.5*Math.PI) {
+      shinFrontR2[i] = false;
+      shinFrontR3[i] = true;
+    }
+  }
+  if (shinFrontR3[i]) {
+    raccoons[i][1].front_shin_R_028.rotation.x -= step2.x * frontLegsDirection[i]*barSpeedF(i);
+    if ( frontLegsDirection[i] == 1) {
+      raccoons[i][1].front_shin_R_028.rotation.x = startRotationShinFrontR[i];
+      shinFrontR3[i] = false;
+      shinFrontR1[i] = true;
+    }
+  }
+}
+
+/*  Function that animates the front-Left shin.
+    Parameters:
+    - i: the i-th raccoon.
+ */
+function walkFrontShinLeft(i) {
+  var step1 = {x: changeShinFrontL[i]/(legStepsAnimation[i]*0.32)}
+  var step2 = {x: changeShinFrontL[i]/(legStepsAnimation[i]*0.68)}
+  if (shinFrontL1[i]) {
+    if (frontLegsDirection[i] == -1) {
+      shinFrontL1[i] = false;
+      shinFrontL2[i] = true;
+    }
+  } 
+  if (shinFrontL2[i]) {
+    raccoons[i][1].front_shin_L_016.rotation.x += step1.x * frontLegsDirection[i]*barSpeedF(i);
+    if (raccoons[i][1].shoulder_L_014.rotation.x <= 0.5*Math.PI) {
+      shinFrontL2[i] = false;
+      shinFrontL3[i] = true;
+    }
+  }
+  if (shinFrontL3[i]) {
+    raccoons[i][1].front_shin_L_016.rotation.x -= step2.x * frontLegsDirection[i]*barSpeedF(i);
+    if ( frontLegsDirection[i] == 1) {
+      raccoons[i][1].front_shin_L_016.rotation.x = startRotationShinFrontL[i];
+      shinFrontL3[i] = false;
+      shinFrontL1[i] = true;
+    }
+  }
+}
+
+/*  Function that animates the back shin.
+    Parameters:
+    - i: the i-th raccoon.
+ */
+function walkBackShin(i) {
+  var step1 = {x: changeBackShin[i]/(legStepsAnimation[i]*0.32)}
+  var step2 = {x: changeBackShin[i]/(legStepsAnimation[i]*0.68)}
+  if (frontLegsDirection[i] == 1) {
+    if (backShin1[i]) {
+      raccoons[i][1].shin_R_052.rotation.x += step2.x * frontLegsDirection[i]*barSpeedF(i);
+      raccoons[i][1].shin_L_040.rotation.x += step2.x * frontLegsDirection[i]*barSpeedF(i);
+      if (raccoons[i][1].shoulder_L_014.rotation.x >= 0.5*Math.PI) {
+        backShin1[i] = false;
+        backShin2[i] = true;
+      }
+    }
+    if (backShin2[i]) {
+      raccoons[i][1].shin_R_052.rotation.x -= step1.x * frontLegsDirection[i]*barSpeedF(i);
+      raccoons[i][1].shin_L_040.rotation.x -= step1.x * frontLegsDirection[i]*barSpeedF(i);
+    }
+  } else {
+    raccoons[i][1].shin_R_052.rotation.x = startRotationBackShin[i].r;
+    raccoons[i][1].shin_L_040.rotation.x = startRotationBackShin[i].l;
+    backShin1[i] = true;
+    backShin2[i] = false;
+  }
+}
+
+/*  Function that animates the front-left foot.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkFrontFootLeft(i) {
   var footL1Step = {x: frontFootL1[i].x/(legStepsAnimation[i])};
   var footL2Step = {x: frontFootL2[i].x/(legStepsAnimation[i]*0.32)};
@@ -1683,6 +1848,10 @@ function walkFrontFootLeft(i) {
   }
 }
 
+/*  Function that animates the front-right foot.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkFrontFootRight(i) {
   var footR1Step = {x: frontFootR1[i].x/(legStepsAnimation[i])}
   var footR2Step = {x: frontFootR2[i].x/(legStepsAnimation[i]*0.32)}
@@ -1719,18 +1888,10 @@ function walkFrontFootRight(i) {
   }
 }
 
-function walkBackThighLeft(i) {
-  var thighLStep = {x: changeThighBackL[i].x/legStepsAnimation[i], z: changeThighBackL[i].z/legStepsAnimation[i]}
-  raccoons[i][1].thigh_L_039.rotation.x -= thighLStep.x * frontLegsDirection[i]*barSpeedF(i);
-  raccoons[i][1].thigh_L_039.rotation.z -= thighLStep.z * frontLegsDirection[i]*barSpeedF(i);
-}
-
-function walkBackThighRight(i) {
-  var thighRStep = {x: changeThighBackR[i].x/legStepsAnimation[i], z: changeThighBackR[i].z/legStepsAnimation[i]}
-  raccoons[i][1].thigh_R_051.rotation.x -= thighRStep.x * frontLegsDirection[i]*barSpeedF(i);
-  raccoons[i][1].thigh_R_051.rotation.z += thighRStep.z * frontLegsDirection[i]*barSpeedF(i);
-}
-
+/*  Function that animates the back-left foot.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkBackFootLeft(i) {
   var footLStep = {x: backFootL[i].x/(legStepsAnimation[i]*0.85)}
   if (raccoons[i][1].thigh_R_051.rotation.x >= 0.3*Math.PI) {
@@ -1740,6 +1901,10 @@ function walkBackFootLeft(i) {
   }
 }
 
+/*  Function that animates the back-right foot.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkBackFootRight(i) {
   var footRStep = {x: backFootR[i].x/(legStepsAnimation[i]*0.85)}
   if (raccoons[i][1].thigh_R_051.rotation.x >= 0.3*Math.PI) {
@@ -1749,82 +1914,30 @@ function walkBackFootRight(i) {
   }
 }  
 
-function walkFrontShinRight(i) {
-  var step1 = {x: changeShinFrontR[i]/(legStepsAnimation[i]*0.32)}
-  var step2 = {x: changeShinFrontR[i]/(legStepsAnimation[i]*0.68)}
-  if (shinFrontR1[i]) {
-    if (frontLegsDirection[i] == -1) {
-      shinFrontR1[i] = false;
-      shinFrontR2[i] = true;
-    }
-  } 
-  if (shinFrontR2[i]) {
-    raccoons[i][1].front_shin_R_028.rotation.x += step1.x * frontLegsDirection[i]*barSpeedF(i);
-    if (raccoons[i][1].shoulder_L_014.rotation.x <= 0.5*Math.PI) {
-      shinFrontR2[i] = false;
-      shinFrontR3[i] = true;
-    }
-  }
-  if (shinFrontR3[i]) {
-    raccoons[i][1].front_shin_R_028.rotation.x -= step2.x * frontLegsDirection[i]*barSpeedF(i);
-    if ( frontLegsDirection[i] == 1) {
-      raccoons[i][1].front_shin_R_028.rotation.x = startRotationShinFrontR[i];
-      shinFrontR3[i] = false;
-      shinFrontR1[i] = true;
-    }
-  }
+/*  Function that animates the back-left thigh.
+    Parameters:
+    - i: the i-th raccoon.
+ */
+function walkBackThighLeft(i) {
+  var thighLStep = {x: changeThighBackL[i].x/legStepsAnimation[i], z: changeThighBackL[i].z/legStepsAnimation[i]}
+  raccoons[i][1].thigh_L_039.rotation.x -= thighLStep.x * frontLegsDirection[i]*barSpeedF(i);
+  raccoons[i][1].thigh_L_039.rotation.z -= thighLStep.z * frontLegsDirection[i]*barSpeedF(i);
 }
 
-function walkFrontShinLeft(i) {
-  var step1 = {x: changeShinFrontL[i]/(legStepsAnimation[i]*0.32)}
-  var step2 = {x: changeShinFrontL[i]/(legStepsAnimation[i]*0.68)}
-  if (shinFrontL1[i]) {
-    if (frontLegsDirection[i] == -1) {
-      shinFrontL1[i] = false;
-      shinFrontL2[i] = true;
-    }
-  } 
-  if (shinFrontL2[i]) {
-    raccoons[i][1].front_shin_L_016.rotation.x += step1.x * frontLegsDirection[i]*barSpeedF(i);
-    if (raccoons[i][1].shoulder_L_014.rotation.x <= 0.5*Math.PI) {
-      shinFrontL2[i] = false;
-      shinFrontL3[i] = true;
-    }
-  }
-  if (shinFrontL3[i]) {
-    raccoons[i][1].front_shin_L_016.rotation.x -= step2.x * frontLegsDirection[i]*barSpeedF(i);
-    if ( frontLegsDirection[i] == 1) {
-      raccoons[i][1].front_shin_L_016.rotation.x = startRotationShinFrontL[i];
-      shinFrontL3[i] = false;
-      shinFrontL1[i] = true;
-    }
-  }
+/*  Function that animates the back-right thigh.
+    Parameters:
+    - i: the i-th raccoon.
+ */
+function walkBackThighRight(i) {
+  var thighRStep = {x: changeThighBackR[i].x/legStepsAnimation[i], z: changeThighBackR[i].z/legStepsAnimation[i]}
+  raccoons[i][1].thigh_R_051.rotation.x -= thighRStep.x * frontLegsDirection[i]*barSpeedF(i);
+  raccoons[i][1].thigh_R_051.rotation.z += thighRStep.z * frontLegsDirection[i]*barSpeedF(i);
 }
 
-function walkBackShin(i) {
-  var step1 = {x: changeBackShin[i]/(legStepsAnimation[i]*0.32)}
-  var step2 = {x: changeBackShin[i]/(legStepsAnimation[i]*0.68)}
-  if (frontLegsDirection[i] == 1) {
-    if (backShin1[i]) {
-      raccoons[i][1].shin_R_052.rotation.x += step2.x * frontLegsDirection[i]*barSpeedF(i);
-      raccoons[i][1].shin_L_040.rotation.x += step2.x * frontLegsDirection[i]*barSpeedF(i);
-      if (raccoons[i][1].shoulder_L_014.rotation.x >= 0.5*Math.PI) {
-        backShin1[i] = false;
-        backShin2[i] = true;
-      }
-    }
-    if (backShin2[i]) {
-      raccoons[i][1].shin_R_052.rotation.x -= step1.x * frontLegsDirection[i]*barSpeedF(i);
-      raccoons[i][1].shin_L_040.rotation.x -= step1.x * frontLegsDirection[i]*barSpeedF(i);
-    }
-  } else {
-    raccoons[i][1].shin_R_052.rotation.x = startRotationBackShin[i].r;
-    raccoons[i][1].shin_L_040.rotation.x = startRotationBackShin[i].l;
-    backShin1[i] = true;
-    backShin2[i] = false;
-  }
-}
-
+/*  Function that animates the spine.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkSpine(i) {
   var step = 0.1*Math.PI/legStepsAnimation[i];
   raccoons[i][1].spine_00_02.rotation.x -= step*frontLegsDirection[i]*barSpeedF(i);
@@ -1837,6 +1950,10 @@ function walkSpine(i) {
   raccoons[i][1].spine_03_010.position.y -= step*frontLegsDirection[i]*barSpeedF(i);
 }
 
+/*  Function that animates the rib cage.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkRibCage(i) {
   var step1 = 0.21/legStepsAnimation[i];
   var step2 = 0.07/legStepsAnimation[i];
@@ -1844,11 +1961,19 @@ function walkRibCage(i) {
   raccoons[i][1].ribcage_038.position.y += step2*frontLegsDirection[i]*barSpeedF(i);
 }
 
+/*  Function that animates the neck.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function walkNeck(i) {
   var neckStep = {x: changeNeck[i].x/legStepsAnimation[i]}
   raccoons[i][1].neck_011.rotation.x -= neckStep.x * frontLegsDirection[i]*barSpeedF(i);
 }
 
+/*  Function that animates all joins of the tail.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function tail(i) {
   if(tail1[i]) {
     raccoons[i][1].tail_00_03.rotation.x -= tailValues[i].t1.step*frontLegsDirection[i]*barSpeedF(i);
@@ -1900,19 +2025,29 @@ function tail(i) {
   }
 }
 
+/*  Function that repeat all animation back and forth.
+    Parameters:
+    - i: the i-th raccoon.
+ */
 function yoyo(i) {
-
+  // Plays footsteps audio if the leg movement is 1 and touches the track field.
   if (frontLegsDirection[i] == 1 && raccoons[i][1].shoulder_L_014.rotation.x > 0.5*Math.PI && footStep[i]) {
     footStep[i] = false;
     findSound("firstSteps" + i).play()
     findSound("secondSteps" + i).play()
   }
   
+  // Used to avoid the sound loop.
   if (frontLegsDirection[i] == -1) footStep[i] = true;
 
+  // Changes the direction of animation.
   if (raccoons[i][1].shoulder_L_014.rotation.x >= 0.65*Math.PI || 
     raccoons[i][1].shoulder_L_014.rotation.x <= startRotationShoulderL[i].x) {
       frontLegsDirection[i] *= -1; 
+      /* For other raccoons if the animation is over,
+         the next animation starts with a random increase or decrease in speed. 
+         This value has probability 0 to be an increase if it has reached the maximum speed 
+         while it has high probability if it is far from the maximum speed. */
       if (i != 0 && frontLegsDirection[i] == 1) {
         var weight = fps/boostfps;
         legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 70*weight)/20*weight)*5;
@@ -1920,11 +2055,20 @@ function yoyo(i) {
   }
 }
 
+/*  Function that return the multiplier of the speed.
+    Parameters:
+    - i: the i-th raccoon. If 0 return barspeed + basevalue + boost given by balloons, 1 otherwise.
+ */
 function barSpeedF(i) {
   if (i == 0) return  barSpeed + 0.25 + boostBalloon; 
   else return 1
 }
 
+/*  Function that update the HUD.
+    Parameters:
+    - time: time passed since first frame;
+    - startingTime: time passed since first frame of the race start.
+ */
 function hudUpdate(time, startingTime) {
   timeUpdate(time, startingTime)
   positionUpdate();
@@ -1932,6 +2076,12 @@ function hudUpdate(time, startingTime) {
   speedBarUpdate();
 }
 
+/*  Function that updates the time in the HUD in the format s:c 
+    where s are seconds and c are hundredths of a second, both expressed as two digits.
+    Parameters:
+    - time: time passed since first frame;
+    - startingTime: time passed since first frame of the race start.
+ */
 function timeUpdate(time, startingTime){
   var timeInSeconds = (time - startingTime - 3);
   var seconds = timeInSeconds - (timeInSeconds % 1);
@@ -1946,6 +2096,7 @@ function timeUpdate(time, startingTime){
   document.getElementById("td3").innerHTML = timePassed;
 }
 
+// Function that updates the position in the HUD counting the raccoons in front of our.
 function positionUpdate(){
   position = 1;
   for(var i = 1; i < raccoons.length; i++){
@@ -1954,6 +2105,7 @@ function positionUpdate(){
   document.getElementById("td2").innerHTML = "Position: " + position + "°";
 }
 
+// Function that updates the A and D key in the HUD changing its opacity.
 function AandDUpdate(){
   var aBoxHtml = document.getElementById("A");
   var dBoxHtml = document.getElementById("D");
@@ -1969,40 +2121,56 @@ function AandDUpdate(){
   }
 }
 
+// Function that updates the bar speed in the HUD.
 function speedBarUpdate(){
   var percentageBarSpeed = Math.round((barSpeed/maxSpeed)*100) + "%";
-
   var speedBar = document.getElementById("speedBar");
   var styleAttribute = "width: " + percentageBarSpeed + "; font-family: Copperplate, Papyrus, fantasy; font-size: 30px"
   speedBar.setAttribute("style", styleAttribute);
   speedBar.innerHTML = "<b>"+ percentageBarSpeed + "</b>";
 }
 
+// Utility function used to print the things on console.
 function print(elem) {
   console.log(elem);
 }
 
+/*  Render function for each frame:
+    - time: time passed since first frame;
+ */
 function render(time) {
-  time *= 0.001; 
+  time *= 0.001;
 
+  // If all models are loaded.
   if (allReady){
+    /*** FPS fix ***/
+    // Starting time to check.
     if (startFps) {
       startFps = false;
       timeFps = time;
     } 
-    if (time <= timeFps + 1) fps++;
+    if (time <= timeFps + 1) fps++; // Count number of frame per 1 second.
     else {
+      // Fix speed based on fps registred.
       if (setFps) {        
         setFps = false;
         setSpeedFps()
       }
+
+      // Decrease bar speed over time.
       barSpeed -= 0.001;
-      boostBalloon -= 0.0003;
       if(barSpeed < 0) barSpeed = 0;
+
+      // Decrease balloons boost speed over time.
+      boostBalloon -= 0.0003;
       if(boostBalloon < 0) boostBalloon = 0;
-      walkRaccoon(time);  
+
+      // All things about the game
+      startGame(time);  
     }
   }
+
+  // Render and Tween (animation) update for each frame
   renderer.render(scene, camera);
   TWEEN.update();
   requestAnimationFrame(render);

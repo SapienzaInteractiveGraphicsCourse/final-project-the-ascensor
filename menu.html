@@ -30,7 +30,7 @@
                 text-decoration:none;
                 font-family: Copperplate, Papyrus, fantasy;
                 font-weight:300;
-                font-size: 30px;
+                font-size: 25px;
                 color:rgb(87, 85, 85);
                 background-color: #ffffff00;
                 text-align:center;
@@ -43,28 +43,42 @@
            
         </style>
 	</head>
-    <body>
-        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:60px; font-weight: bold;'>Raccons Rush</div>
-        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:30px; '>Welcome to Raccons Rush game</div>
-        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:30px; '>You will impersonate Steve a young raccoon who wants to become the fastest raccoon in the world.</div> 
-        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:30px; '>Today he will be able to fulfill his dream. He will be competing with the greatest raccoon racers from around the world.</div>
-        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:30px; '>All animals from all eras and all parts of the world have gathered today to witness this great event.</div>
-        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:30px; '>Will Steve be able to make his dream come true?</div>
+    <body>        
+        <!-- <script>
+            function prova() {
+                var value="true";
+                var queryString = "?para1=" + value;
+                window.location.href = "./easy/easy.html" + queryString;
+            }
+        </script> -->
+        <script>
+            function prova() {
+                localStorage.setItem("shadow", "0");
+                window.location.href = "./easy/easy.html";
+            }
+        </script>
+        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:55px; font-weight: bold;'>Raccons Rush</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:25px; '>Welcome to Raccons Rush game</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:25px; '>You will impersonate Steve a young raccoon who wants to become the fastest raccoon in the world.</div> 
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:25px; '>Today he will be able to fulfill his dream. He will be competing with the greatest raccoon racers from around the world.</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:25px; '>All animals from all eras and all parts of the world have gathered today to witness this great event.</div>
+        <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:25px; '>Will Steve be able to make his dream come true?</div>
 
-        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:50px; '>Instructions:
-            <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:30px; '>Press the <b>A</b> and <b>D</b> keys alternately to make Steve run, the faster you are the faster steve will be too.<br> Be careful though! If you don't click the keys alternately Steve will slow down. </div>
-            <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:30px; '>During the race, five balloons will appear and, if you are fast enough to click them with the mouse, Steve will get a speed bonus</div>
+        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:45px; '>Instructions:
+            <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:25px; '>Press the <b>A</b> and <b>D</b> keys alternately to make Steve run, the faster you are the faster steve will be too.<br> Be careful though! If you don't click the keys alternately Steve will slow down. </div>
+            <div align='center' valign='top' style='color:rgb(87, 85, 85);font-size:25px; '>During the race, five balloons will appear and, if you are fast enough to click them with the mouse, Steve will get a speed bonus</div>
         </div>
         
-        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:50px;'>Choose difficulty:</div>
+        <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:45px;'>Choose difficulty:</div>
         <table align='center'>
             <tr>
                 <td id = 'td1'>
-                    <button id = "button1" onclick="location.href='./easy/easy.html'">Easy</button>
+                    <!-- <button id = "button1" onclick="location.href='./easy/easy.html'">Easy</button> -->
+                    <button id = "button1" onclick="prova()">Easy</button>
                 </td>
 
                 <td id = 'td2'>
-                    <div align='left' style='color:rgb(87, 85, 85);font-size:30px;'>
+                    <div align='left' style='color:rgb(87, 85, 85);font-size:25px;'>
                         Other raccoons are much slower than your maximum speed
                     </div>
                 </td>
