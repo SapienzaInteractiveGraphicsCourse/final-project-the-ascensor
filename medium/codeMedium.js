@@ -1085,7 +1085,7 @@ function myRaccoon(z, i){
       } 
     });
 
-    var speed = 80;
+    var speed = 73;
     if (i == 0) speed = 140; // Is grather then other raccons because our raccon have barspeed multiplier and baloon boost
     raccoonStartPosition(root, speed, i)
     scene.add(root);
@@ -1494,9 +1494,10 @@ function stopSoundAnimals(){
 /* Function triggere when some when any key on the keyboard is pressed. In particular,
    when A or D is pressed, the amount of addition or removal from the bar speed is calculated.*/
 function onKeyDown(event) {
-  var base = (maxSpeed*20) /100;
+  var base = (maxSpeed*7) /100;
+  var error = (maxSpeed*20) /100;
   var percentage = (100*barSpeed)/maxSpeed;
-  var decrease = (maxSpeed*15) /100;
+  var decrease = (maxSpeed*6) /100;
   switch(event.keyCode){
     case 65:
       if (!a) {
@@ -1504,7 +1505,7 @@ function onKeyDown(event) {
         d = false;
         barSpeed += base - ((decrease*percentage)/100);
         if(barSpeed>maxSpeed) barSpeed = maxSpeed;
-      } else barSpeed -= base;
+      } else barSpeed -= error;
       break;
     case 68:
       if (!d) {
@@ -1512,7 +1513,7 @@ function onKeyDown(event) {
         a = false;
         barSpeed += base - ((decrease*percentage)/100);
         if(barSpeed>maxSpeed) barSpeed = maxSpeed;
-      } else barSpeed -= base;
+      } else barSpeed -= error;
       break;
   }
 }
@@ -2120,7 +2121,10 @@ function yoyo(i) {
          while it has high probability if it is far from the maximum speed. */
       if (i != 0 && frontLegsDirection[i] == 1) {
         var weight = fps/boostfps;
-        legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 70*weight)/20*weight)*5;
+        var differnce = (70*weight - legStepsAnimation[i]);
+        var percentage = (100*differnce)/10;
+        legStepsAnimation[i] += (Math.random() - 0.5) + (percentage/100)/2; 
+        //(Math.random() - Math.abs(legStepsAnimation[i] - 70*weight)/20*weight)*5;
       } 
   }
 }
@@ -2227,12 +2231,15 @@ function render(time) {
         setSpeedFps()
       }
 
+      // Weight to speeds up the decrese of speed to simulate the decrese obtained with 144 FPS.
+      var weight = fps/boostfps;
+
       // Decrease bar speed over time.
-      barSpeed -= 0.001;
+      barSpeed -= 0.00115/weight;
       if(barSpeed < 0) barSpeed = 0;
 
       // Decrease balloons boost speed over time.
-      boostBalloon -= 0.0003;
+      boostBalloon -= 0.0003/weight;
       if(boostBalloon < 0) boostBalloon = 0;
 
       // All things about the game

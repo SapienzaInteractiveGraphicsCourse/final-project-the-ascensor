@@ -278,7 +278,7 @@ function environment(){
   trees();
   finishLine();
   myEmisphereLight();
-  myDirectionalLight();
+  torches();
   fog();
   for (var i = 0; i < spawnBalloonBoolean.length; i++) myBallon();
   spawnRaccoon();
@@ -357,12 +357,13 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
   textureField.magFilter = THREE.NearestFilter;
 
   const planeGeo = new THREE.PlaneGeometry(sizeX, sizeY);
-  const planeMat = new THREE.MeshLambertMaterial({
+  const planeMat = new THREE.MeshPhongMaterial({
     map: textureField,
     side: THREE.DoubleSide,
   });
+  planeMat.shininess = 0;
   planeMat.color.setRGB(0.25, 0.25, 0.25);
-  if(line != 1) planeMat.color.setRGB(2.5, 2.5, 2.5); // white texture
+  if(line != 1) planeMat.color.setRGB(2, 2, 2); // white texture
 
   const mesh = new THREE.Mesh(planeGeo,planeMat);
 
@@ -1085,7 +1086,7 @@ function myRaccoon(z, i){
       } 
     });
 
-    var speed = 80;
+    var speed = 73;
     if (i == 0) speed = 140; // Is grather then other raccons because our raccon have barspeed multiplier and baloon boost
     raccoonStartPosition(root, speed, i)
     scene.add(root);
@@ -1323,39 +1324,82 @@ function myRacconCursor() {
 function myEmisphereLight(){
   const skyColor = 0xB1E1FF;
   const groundColor = 0xB97A20;
-  const intensity = 1;
+  const intensity = 0.2;
   const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
   scene.add(light);
 }
 
-/* Function that add at the scene the directional light. 
+// Function that create the torches
+function torches() {
+  myTorch(-62, 0, 7, 0.15);
+  myTorch(-34, 0, 7, 0.15);
+  myTorch(-6, 0, 7, 0.15);
+  myTorch(22, 0, 7, 0.15);
+  myTorch(50, 0, 6, 0.15);
+  myTorch(71, 3.2, 7.6, 0.1, 0.5);
+  myTorch(71, 3.2, -7.6, 0.1, 0.5);
+}
+
+// Function that load the torch model and set its animations and starting position.
+function myTorch(x, y, z, scale, rotation = 1) {
+  gltfLoader.load('./../resources/models/torch/scene.gltf', function (gltf){
+    const root = gltf.scene;
+    root.scale.multiplyScalar(scale);
+    root.position.x = x;
+    root.position.y = y;
+    root.position.z = z;
+    root.rotation.y = Math.PI*rotation;
+  
+    root.traverse((object) => {
+      if (object.isMesh){
+        object.frustumCulled = true; 
+        object.material.depthWrite = true;
+        if (enableShadow) {
+          object.receiveShadow = true;
+          object.castShadow = true;
+        }      
+      } 
+    });
+
+    var fire = root.getObjectByName("mesh_2");
+    var animation1 = new TWEEN.Tween(fire.scale).to({x:fire.scale.x * 1.3, y:fire.scale.y * 1.3, z:fire.scale.z * 0.7},1000);
+    animation1.repeat(Infinity);
+    animation1.yoyo(true);
+    animation1.start();
+    var animation2 = new TWEEN.Tween(fire.position).to({x:fire.position.x-0.6, y:fire.position.y-0.6, z:4},1000);
+    animation2.repeat(Infinity);
+    animation2.yoyo(true);
+    animation2.start();
+
+    animations.push(animation1)
+    animations.push(animation2)
+    
+    torchLight(x-(1*scale),y+(16*scale),z+(1*scale))
+    scene.add(root);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
+/* Function that add at the scene the point light positioned on the top of a torch. 
    If the "enable shadow" checkbox in the menu has been selected, then the light will cast shadows. */
-function myDirectionalLight(){
-  const color = 0xFFFFFF;
-  const intensity = 5;
-  const light = new THREE.DirectionalLight(color, intensity);
-  light.position.set(300, 300, 0);
-  light.target.position.set(0, 0, 0);
+function torchLight(x, y, z){
+  const color = "#ff5500";
+  const intensity = 1;
+  const light = new THREE.PointLight(color, intensity);
+  light.distance = 40;
+  light.position.set(x, y, z);
   if (enableShadow) {
     light.castShadow = true;
-    light.shadow.camera.top = 300;
-    light.shadow.camera.bottom = -300;
-    light.shadow.camera.right = 300;
-    light.shadow.camera.left = -300;
-    light.shadow.mapSize.width = 60000;
-    light.shadow.mapSize.height = 60000;
-    light.shadow.bias = -0.0005;
-    light.shadow.camera.far = 1000;
   }
   scene.add(light);
-  scene.add(light.target);
 }
 
 // Function that adds light blue fog to the scene, simulating an unfinished plane with a sky.
 function fog() {
   const near = 1;
   const far = 500;
-  const color = '#62cff4';
+  const color = '#020c1c';
   scene.fog = new THREE.Fog(color, near, far);
   scene.background = new THREE.Color(color);
 }
@@ -1410,7 +1454,7 @@ function spawnBalloon(i) {
     animation2.repeat(Infinity);
     animation2.yoyo(true);
     animation2.start();
-    var animation3 = new TWEEN.Tween(balloonToSpawn[i].position).to({x:raccoons[0][0].position.x, y:50, z:balloonToSpawn[i].position.z}, 17000);
+    var animation3 = new TWEEN.Tween(balloonToSpawn[i].position).to({x:raccoons[0][0].position.x, y:50, z:balloonToSpawn[i].position.z}, 10000);
     animation3.onUpdate(function() {
       if (balloonToSpawn[i].position.y > 45){
         animation3.stop();
@@ -1439,7 +1483,7 @@ function onClickBalloon(event) {
     while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
     play("./../resources/audios/balloon/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05, false, true, "", 0);
-    boostBalloon += 0.2;
+    boostBalloon += 0.16;
     balloonPopped += 1;
     balloons.remove(selectedObject);
   }
@@ -1494,9 +1538,10 @@ function stopSoundAnimals(){
 /* Function triggere when some when any key on the keyboard is pressed. In particular,
    when A or D is pressed, the amount of addition or removal from the bar speed is calculated.*/
 function onKeyDown(event) {
-  var base = (maxSpeed*20) /100;
+  var base = (maxSpeed*7) /100;
+  var error = (maxSpeed*20) /100;
   var percentage = (100*barSpeed)/maxSpeed;
-  var decrease = (maxSpeed*15) /100;
+  var decrease = (maxSpeed*6) /100;
   switch(event.keyCode){
     case 65:
       if (!a) {
@@ -1504,7 +1549,7 @@ function onKeyDown(event) {
         d = false;
         barSpeed += base - ((decrease*percentage)/100);
         if(barSpeed>maxSpeed) barSpeed = maxSpeed;
-      } else barSpeed -= base;
+      } else barSpeed -= error;
       break;
     case 68:
       if (!d) {
@@ -1512,7 +1557,7 @@ function onKeyDown(event) {
         a = false;
         barSpeed += base - ((decrease*percentage)/100);
         if(barSpeed>maxSpeed) barSpeed = maxSpeed;
-      } else barSpeed -= base;
+      } else barSpeed -= error;
       break;
   }
 }
@@ -2120,7 +2165,10 @@ function yoyo(i) {
          while it has high probability if it is far from the maximum speed. */
       if (i != 0 && frontLegsDirection[i] == 1) {
         var weight = fps/boostfps;
-        legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 70*weight)/20*weight)*5;
+        var differnce = (70*weight - legStepsAnimation[i]);
+        var percentage = (100*differnce)/10;
+        legStepsAnimation[i] += (Math.random() - 0.5) + (percentage/100)/2; 
+        //(Math.random() - Math.abs(legStepsAnimation[i] - 70*weight)/20*weight)*5;
       } 
   }
 }
@@ -2227,12 +2275,15 @@ function render(time) {
         setSpeedFps()
       }
 
+      // Weight to speeds up the decrese of speed to simulate the decrese obtained with 144 FPS.
+      var weight = fps/boostfps;
+
       // Decrease bar speed over time.
-      barSpeed -= 0.001;
+      barSpeed -= 0.00115/weight;
       if(barSpeed < 0) barSpeed = 0;
 
       // Decrease balloons boost speed over time.
-      boostBalloon -= 0.0003;
+      boostBalloon -= 0.0003/weight;
       if(boostBalloon < 0) boostBalloon = 0;
 
       // All things about the game

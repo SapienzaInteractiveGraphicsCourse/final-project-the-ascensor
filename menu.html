@@ -2,7 +2,8 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Raccons Rush</title>
+		<title>Raccoons Rush</title>
+        <link rel="shortcut icon" href="#">
         <style>
             body{
                 background-image: url('./resources/textures/oldPaperBackground.png');
@@ -44,17 +45,11 @@
         </style>
 	</head>
     <body>        
-        <!-- <script>
-            function prova() {
-                var value="true";
-                var queryString = "?para1=" + value;
-                window.location.href = "./easy/easy.html" + queryString;
-            }
-        </script> -->
         <script>
-            function prova() {
-                localStorage.setItem("shadow", "0");
-                window.location.href = "./easy/easy.html";
+            function play(difficulty) {
+                var checkBox = document.getElementById("shadow").checked
+                localStorage.setItem("shadow", checkBox);
+                window.location.href = "./" + difficulty + "/" + difficulty +".html";
             }
         </script>
         <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:55px; font-weight: bold;'>Raccons Rush</div>
@@ -70,11 +65,15 @@
         </div>
         
         <div align='center' valign='top' style='color:rgb(0, 0, 0);font-size:45px;'>Choose difficulty:</div>
+        <div align='center'>
+            <input type="checkbox" id="shadow" name="shadow" >
+            <label for="shadow" style='color:rgb(87, 85, 85);font-size:25px;'>Enable shadows. A high performance computer is required to play the game smoothly with this option.</label>
+        </div>
+        
         <table align='center'>
             <tr>
                 <td id = 'td1'>
-                    <!-- <button id = "button1" onclick="location.href='./easy/easy.html'">Easy</button> -->
-                    <button id = "button1" onclick="prova()">Easy</button>
+                    <button id = "button1" onclick="play('easy')">Easy</button>
                 </td>
 
                 <td id = 'td2'>
@@ -86,11 +85,11 @@
 
             <tr>
                 <td id = 'td1'>
-                    <button id = "button1">Medium</button>
+                    <button id = "button1" onclick="play('medium')">Medium</button>
                 </td>
 
                 <td id = 'td2'>
-                    <div align='left' style='color:rgb(87, 85, 85);font-size:30px; '>
+                    <div align='left' style='color:rgb(87, 85, 85);font-size:25px; '>
                         Other raccoons might be a bit faster than your top speed. You will have to pop balloons to win! <br> Also, it will be more difficult to reach the maximum speed
                     </div>
                 </td>
@@ -98,11 +97,11 @@
 
             <tr>
                 <td id = 'td1'>
-                    <button id = "button1">Hard</button>
+                    <button id = "button1" onclick="play('hard')">Hard</button>
                 </td>
 
                 <td id = 'td2'>
-                    <div align='left' style='color:rgb(87, 85, 85);font-size:30px; '>
+                    <div align='left' style='color:rgb(87, 85, 85);font-size:25px; '>
                         The speeds will be the same as the medium difficulty.<br> The race will take place at night and balloons will give a lower boost. <br> Therefore it will be more difficult to see the balloons to click on.
                     </div>
                 </td>
