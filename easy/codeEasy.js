@@ -1537,7 +1537,7 @@ function init(){
   /*** Event Listener ***/  
   window.addEventListener( 'resize', onWindowResize, false );
   document.addEventListener('keydown', onKeyDown, false);
-  document.addEventListener("click", onClickBalloon, true);
+  document.addEventListener("mousedown", onClickBalloon, true);
 
   /*** Set environment ***/
   environment();
@@ -1559,6 +1559,8 @@ function createCanvas(orbitDiv, div, div2, html){
   div2.setAttribute("id","hud");
   div2.setAttribute("ng-class","{visible: style.visible");
   div2.setAttribute("class","visible");
+  div2.setAttribute("draggable", "false");
+  div2.setAttribute("ondragstart", "drag(event)");
   div2.innerHTML= html;
   renderer.domElement.setAttribute("class","canvasColor")
   div.appendChild(renderer.domElement);
