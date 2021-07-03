@@ -1093,7 +1093,7 @@ function myRaccoon(z, i){
       } 
     });
 
-    var speed = 73;
+    var speed = 80;
     if (i == 0) speed = 140; // Is grather then other raccons because our raccon have barspeed multiplier and baloon boost
     raccoonStartPosition(root, speed, i)
     scene.add(root);
@@ -2124,6 +2124,8 @@ function yoyo(i) {
   // Changes the direction of animation.
   if (raccoons[i][1].shoulder_L_014.rotation.x >= 0.65*Math.PI || 
     raccoons[i][1].shoulder_L_014.rotation.x <= startRotationShoulderL[i].x) {
+      if(frontLegsDirection == 1) raccoons[i][1].shoulder_L_014.rotation.x = 0.65*Math.PI;
+      if(frontLegsDirection == -1) raccoons[i][1].shoulder_L_014.rotation.x = startRotationShoulderL[i].x;
       frontLegsDirection[i] *= -1; 
       /* For other raccoons if the animation is over,
          the next animation starts with a random increase or decrease in speed. 

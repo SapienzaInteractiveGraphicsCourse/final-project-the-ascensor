@@ -1492,7 +1492,7 @@ function onClickBalloon(event) {
     while (selectedObject.name != "OSG_Scene") selectedObject = selectedObject.parent;
     var randBalloonExplosionAudio = Math.floor(Math.random() * 3) + 1
     play("./../resources/audios/balloon/balloonExplosion" + randBalloonExplosionAudio + ".wav", 0.05, false, true, "", 0);
-    boostBalloon += 0.16;
+    boostBalloon += 0.17;
     balloonPopped += 1;
     balloons.remove(selectedObject);
   }
@@ -2169,6 +2169,8 @@ function yoyo(i) {
   // Changes the direction of animation.
   if (raccoons[i][1].shoulder_L_014.rotation.x >= 0.65*Math.PI || 
     raccoons[i][1].shoulder_L_014.rotation.x <= startRotationShoulderL[i].x) {
+      if(frontLegsDirection == 1) raccoons[i][1].shoulder_L_014.rotation.x = 0.65*Math.PI;
+      if(frontLegsDirection == -1) raccoons[i][1].shoulder_L_014.rotation.x = startRotationShoulderL[i].x;
       frontLegsDirection[i] *= -1; 
       /* For other raccoons if the animation is over,
          the next animation starts with a random increase or decrease in speed. 
