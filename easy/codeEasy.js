@@ -1692,7 +1692,7 @@ function startGame(time) {
       /*** Walk racccoon animation ***/
       for (var i = 0; i < raccoons.length; i++) {
         // Move the whole model.
-        var step = 3/legStepsAnimation[i];
+        var step = 3/(legStepsAnimation[i]*weight);
         raccoons[i][0].position.x += step*barSpeedF(i);
 
         // Rotate shoulders.
@@ -2133,8 +2133,8 @@ function yoyo(i) {
          while it has high probability if it is far from the maximum speed. */
       if (i != 0 && frontLegsDirection[i] == 1) {
         var weight = fps/boostfps;
-        var differnce = (80*weight - legStepsAnimation[i]);
-        var percentage = (100*differnce)/10;
+        var difference = (80*weight - legStepsAnimation[i]);
+        var percentage = (100*difference)/10;
         legStepsAnimation[i] += ((Math.random() - 0.5) + (percentage/100)/2) * (5*weight);
       } 
   }
