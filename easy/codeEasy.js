@@ -176,87 +176,93 @@ loadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
 
 // Loading completed
 loadingManager.onLoad = function ( ) {
-  if(loadV){
-    loadV = false;
-    var button = document.createElement("button");
-    button.setAttribute("id", "button1");
-    button.innerHTML = "Play!";
-    document.getElementById("clickText").innerHTML="";
-    document.getElementById("clickText").appendChild(button);
-    button.addEventListener("click", function() {
-      var orbitDiv = document.getElementById("orbitDiv");
-      var div = document.createElement('div');
-      div.setAttribute("style", "position: relative;");
-      div.setAttribute("id", "divCanvas");
-      var div2 = document.createElement('div');
-
-      // create HUD
-      var html =  '<table class = "unselectable" width= 100%>' +
-                    '<colgroup>' +
-                      '<col span="1" style="width: 25%;">' +
-                      '<col span="1" style="width: 50%;">' +
-                      '<col span="1" style="width: 25%;">' +
-                    '</colgroup>' +
-                    '<tbody>' +
-                      '<tr>' +
-                        '<td id = "td2">'  +
-                          'Position: ' + position + '°' +
-                        '</td>' +
-                        '<td id = "td1">' +
-                          '<div class="meter">' +
-                            '<span id = "speedBar" align = "center" style="width: 0%; font-family: Copperplate, Papyrus, fantasy; font-size: 30px">' +
-                              "<b>" + 0 + "%</b>" + 
-                            '</span>' +
-                          '</div>' +
-                        '</td>' +
-                        '<td id = "td3">' +
-                          'Time: ' + timePassed +
-                        '</td>' +
-                      '</tr>' +
-                    '</tbody>' +
-                  '</table>' +
-                  '<div id = "countdown" class= "unselectable" style ="font-size: 140px;"></div>' + 
-                  '<div class= "unselectable" id = "A" class="ng-binding">' +
-                    '<b>A</b>' +
-                  '</div>' +
-                  '<div class= "unselectable" id = "D" class="ng-binding">' +
-                    '<b>D</b>' +
-                  '</div>';
-        createCanvas(orbitDiv, div, div2, html);
-
-        // inGame, endGame and countdown audio
-        play("./../resources/audios/soundtracks/inGame.mp3", 0.05, true, false, "inGame", 0);
-        play("./../resources/audios/soundtracks/endGame.mp3", 0.05, true, false, "endGame", 0);
-        play("./../resources/audios/soundtracks/countdown.mp3", 0.05, false, false, "countdown", 0);
-
-        // animals audio
-        play("./../resources/audios/chicken/chicken1.mp3", 0.004, true, true, "", 200);
-        play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 450);
-        play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 550);
-        play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 710);
-        play("./../resources/audios/seal/seal.mp3", 0.01, true, true, "", 375);
-        play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 225);
-
-        // two footsteps, one with delay, for each raccoon
-        // raccoon 1
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps0", 0);
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps0", 230);
-        // raccoon 2
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps1", 0);
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps1", 230);
-        // raccoon 3
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps2", 0);
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps2", 230);
-        // raccoon 4
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps3", 0);
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps3", 230);
-        // raccoon 5
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps4", 0);
-        play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps4", 230);
-
-        allReady = true;
-    }, false); 
-  }
+  var reload = localStorage.getItem("reload");
+  if(reload == "true"){
+    localStorage.setItem("reload","false");
+    window.location.reload();
+  } else{
+    if(loadV){
+      loadV = false;
+      var button = document.createElement("button");
+      button.setAttribute("id", "button1");
+      button.innerHTML = "Play!";
+      document.getElementById("clickText").innerHTML="";
+      document.getElementById("clickText").appendChild(button);
+      button.addEventListener("click", function() {
+        var orbitDiv = document.getElementById("orbitDiv");
+        var div = document.createElement('div');
+        div.setAttribute("style", "position: relative;");
+        div.setAttribute("id", "divCanvas");
+        var div2 = document.createElement('div');
+  
+        // create HUD
+        var html =  '<table class = "unselectable" width= 100%>' +
+                      '<colgroup>' +
+                        '<col span="1" style="width: 25%;">' +
+                        '<col span="1" style="width: 50%;">' +
+                        '<col span="1" style="width: 25%;">' +
+                      '</colgroup>' +
+                      '<tbody>' +
+                        '<tr>' +
+                          '<td id = "td2">'  +
+                            'Position: ' + position + '°' +
+                          '</td>' +
+                          '<td id = "td1">' +
+                            '<div class="meter">' +
+                              '<span id = "speedBar" align = "center" style="width: 0%; font-family: Copperplate, Papyrus, fantasy; font-size: 30px">' +
+                                "<b>" + 0 + "%</b>" + 
+                              '</span>' +
+                            '</div>' +
+                          '</td>' +
+                          '<td id = "td3">' +
+                            'Time: ' + timePassed +
+                          '</td>' +
+                        '</tr>' +
+                      '</tbody>' +
+                    '</table>' +
+                    '<div id = "countdown" class= "unselectable" style ="font-size: 140px;"></div>' + 
+                    '<div class= "unselectable" id = "A" class="ng-binding">' +
+                      '<b>A</b>' +
+                    '</div>' +
+                    '<div class= "unselectable" id = "D" class="ng-binding">' +
+                      '<b>D</b>' +
+                    '</div>';
+          createCanvas(orbitDiv, div, div2, html);
+  
+          // inGame, endGame and countdown audio
+          play("./../resources/audios/soundtracks/inGame.mp3", 0.05, true, false, "inGame", 0);
+          play("./../resources/audios/soundtracks/endGame.mp3", 0.05, true, false, "endGame", 0);
+          play("./../resources/audios/soundtracks/countdown.mp3", 0.05, false, false, "countdown", 0);
+  
+          // animals audio
+          play("./../resources/audios/chicken/chicken1.mp3", 0.004, true, true, "", 200);
+          play("./../resources/audios/elephant/elephant.mp3", 0.01, true, true, "", 450);
+          play("./../resources/audios/giraffe/giraffe.mp3", 0.03, true, true, "", 550);
+          play("./../resources/audios/pigeon/pigeon.mp3", 0.03, true, true, "", 710);
+          play("./../resources/audios/seal/seal.mp3", 0.01, true, true, "", 375);
+          play("./../resources/audios/dinosaur/dinosaur.mp3", 0.01, true, true, "", 225);
+  
+          // two footsteps, one with delay, for each raccoon
+          // raccoon 1
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps0", 0);
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps0", 230);
+          // raccoon 2
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps1", 0);
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps1", 230);
+          // raccoon 3
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps2", 0);
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps2", 230);
+          // raccoon 4
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps3", 0);
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps3", 230);
+          // raccoon 5
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "firstSteps4", 0);
+          play("./../resources/audios/raccoonFootsteps/raccoonFootsteps.mp3", 0.015, false, false, "secondSteps4", 230);
+  
+          allReady = true;
+      }, false); 
+    }
+  } 
 };
 
 // Loading in progress

@@ -49,6 +49,7 @@
             function play(difficulty) {
                 var checkBox = document.getElementById("shadow").checked
                 localStorage.setItem("shadow", checkBox);
+                localStorage.setItem("reload", "true");
                 window.location.href = "./" + difficulty + "/" + difficulty +".html";
             }
         </script>
@@ -102,7 +103,7 @@
 
                 <td id = 'td2'>
                     <div align='left' style='color:rgb(87, 85, 85);font-size:25px; '>
-                        The speeds will be the same as the medium difficulty.<br> The race will take place at night and balloons will give a lower boost. <br> Therefore it will be more difficult to see the balloons to click on.
+                        The speeds will be the same as the medium difficulty.<br> The race will take place at night and balloons will give a lower boost. <br> It will be more difficult to click on balloons.
                     </div>
                 </td>
             </tr>

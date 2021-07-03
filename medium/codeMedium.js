@@ -1329,7 +1329,7 @@ function myRacconCursor() {
 
 // Function that add at the scene the emisphere light.
 function myEmisphereLight(){
-  const skyColor = 0xB1E1FF;
+  const skyColor = "#FF7514";
   const groundColor = 0xB97A20;
   const intensity = 1;
   const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
@@ -1339,10 +1339,10 @@ function myEmisphereLight(){
 /* Function that add at the scene the directional light. 
    If the "enable shadow" checkbox in the menu has been selected, then the light will cast shadows. */
 function myDirectionalLight(){
-  const color = 0xFFFFFF;
+  const color = "#FF5E00";
   const intensity = 5;
   const light = new THREE.DirectionalLight(color, intensity);
-  light.position.set(300, 300, 0);
+  light.position.set(300, 100, 0);
   light.target.position.set(0, 0, 0);
   if (enableShadow) {
     light.castShadow = true;
@@ -1363,7 +1363,7 @@ function myDirectionalLight(){
 function fog() {
   const near = 1;
   const far = 500;
-  const color = '#62cff4';
+  const color = '#FF7514';
   scene.fog = new THREE.Fog(color, near, far);
   scene.background = new THREE.Color(color);
 }

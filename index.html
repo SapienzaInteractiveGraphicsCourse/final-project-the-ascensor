@@ -13,6 +13,14 @@
                 font-family: Copperplate, Papyrus, fantasy;
             }
 
+            p{            
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                -webkit-transform: translate(-50%, 100%);
+                transform: translate(-50%, 100%);
+            }
+
             #button1{
                 display:inline-block;
                 position: fixed;
@@ -45,5 +53,6 @@
 	</head>
     <body>
         <button id = "button1" onclick="location.href='./menu.html'">Click to enter the menu</button>
+        <p>*For a better gaming experience, enable hardware acceleration</p>
 	</body>   
 </html>
