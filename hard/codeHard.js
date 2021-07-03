@@ -357,10 +357,18 @@ function myPlane(sizeX, sizeY, texture, x, y, z, line, repeat, endLine = false, 
   textureField.magFilter = THREE.NearestFilter;
 
   const planeGeo = new THREE.PlaneGeometry(sizeX, sizeY);
-  const planeMat = new THREE.MeshPhongMaterial({
-    map: textureField,
-    side: THREE.DoubleSide,
-  });
+  var planeMat;
+  if (!enableShadow) {
+    planeMat = new THREE.MeshBasicMaterial({
+      map: textureField,
+      side: THREE.DoubleSide,
+    });
+  } else {
+    planeMat = new THREE.MeshPhongMaterial({
+      map: textureField,
+      side: THREE.DoubleSide,
+    });
+  }
   planeMat.shininess = 0;
   planeMat.color.setRGB(0.25, 0.25, 0.25);
   if(line != 1) planeMat.color.setRGB(2, 2, 2); // white texture
@@ -1391,6 +1399,7 @@ function torchLight(x, y, z){
   light.position.set(x, y, z);
   if (enableShadow) {
     light.castShadow = true;
+    light.shadow.bias = -0.001;
   }
   scene.add(light);
 }
