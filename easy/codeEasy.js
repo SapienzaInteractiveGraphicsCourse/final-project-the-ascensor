@@ -2136,6 +2136,9 @@ function yoyo(i) {
          while it has high probability if it is far from the maximum speed. */
       if (i != 0 && frontLegsDirection[i] == 1) {
         var weight = fps/boostfps;
+        var differnce = (70*weight - legStepsAnimation[i]);
+        var percentage = (100*differnce)/10;
+        legStepsAnimation[i] += ((Math.random() - 0.5) + (percentage/100)/2) * (5*weight); 
         // legStepsAnimation[i] += (Math.random() - Math.abs(legStepsAnimation[i] - 70*weight)/20*weight)*5;
       } 
   }
