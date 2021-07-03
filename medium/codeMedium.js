@@ -2133,8 +2133,7 @@ function yoyo(i) {
         var weight = fps/boostfps;
         var differnce = (70*weight - legStepsAnimation[i]);
         var percentage = (100*differnce)/10;
-        legStepsAnimation[i] += (Math.random() - 0.5) + (percentage/100)/2; 
-        //(Math.random() - Math.abs(legStepsAnimation[i] - 70*weight)/20*weight)*5;
+        legStepsAnimation[i] += (Math.random() - 0.5) + (percentage/100)/2;
       } 
   }
 }
