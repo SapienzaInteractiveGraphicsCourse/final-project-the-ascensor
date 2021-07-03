@@ -1738,7 +1738,7 @@ function startGame(time) {
       /*** Walk racccoon animation ***/
       for (var i = 0; i < raccoons.length; i++) {
         // Move the whole model.
-        var step = 3/(legStepsAnimation[i]*weight);
+        var step = 3/ legStepsAnimation[i];
         raccoons[i][0].position.x += step*barSpeedF(i);
 
         // Rotate shoulders.
