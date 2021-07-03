@@ -2242,8 +2242,11 @@ function render(time) {
         setSpeedFps()
       }
 
+      // Weight to speeds up the decrese of speed to simulate the decrese obtained with 144 FPS.
+      var weight = fps/boostfps;
+
       // Decrease bar speed over time.
-      barSpeed -= 0.001;
+      barSpeed -= 0.001/weight;
       if(barSpeed < 0) barSpeed = 0;
 
       // Decrease balloons boost speed over time.
