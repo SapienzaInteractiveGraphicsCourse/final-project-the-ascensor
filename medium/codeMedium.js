@@ -1571,7 +1571,8 @@ function createCanvas(orbitDiv, div, div2, html){
   div2.setAttribute("draggable", "false");
   div2.setAttribute("ondragstart", "drag(event)");
   div2.innerHTML= html;
-  renderer.domElement.setAttribute("class","canvasColor")
+  renderer.domElement.setAttribute("class","canvasColor");
+  div.setAttribute("class", "unselectable");
   div.appendChild(renderer.domElement);
   div.appendChild(div2);
   orbitDiv.appendChild(div);

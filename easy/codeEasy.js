@@ -191,7 +191,7 @@ loadingManager.onLoad = function ( ) {
       var div2 = document.createElement('div');
 
       // create HUD
-      var html =  '<table class = "unselectable" width= 100%>' +
+      var html =  '<table width= 100%>' +
                     '<colgroup>' +
                       '<col span="1" style="width: 25%;">' +
                       '<col span="1" style="width: 50%;">' +
@@ -1571,6 +1571,7 @@ function createCanvas(orbitDiv, div, div2, html){
   div2.setAttribute("ondragstart", "drag(event)");
   div2.innerHTML= html;
   renderer.domElement.setAttribute("class","canvasColor")
+  div.setAttribute("class", "unselectable");
   div.appendChild(renderer.domElement);
   div.appendChild(div2);
   orbitDiv.appendChild(div);
